@@ -1,2 +1,2 @@
-export const INITIALIZE_APP = "INITIALIZE_APP";
+export const PROCESS_CALLBACK = "PROCESS_CALLBACK";
 export const USER_LOAD = "USER_LOAD";

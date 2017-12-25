@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import "./styles.css";
 
 class App extends Component {
+  componentDidMount() {
+    console.log("props=", this.props);
+  }
+
   render() {
     return (
       <div className="App">

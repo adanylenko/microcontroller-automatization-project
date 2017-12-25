@@ -1,3 +1,6 @@
 import * as UsersActions from "./users";
+import * as AccountActions from "./account";
 
-export const ActionCreators = Object.assign({}, UsersActions);
+const ActionCreators = Object.assign({}, UsersActions, AccountActions);
+
+export default ActionCreators;

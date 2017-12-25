@@ -1,7 +1,6 @@
 import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import createSagaMiddleware from "redux-saga";
 import { routerReducer, routerMiddleware } from "react-router-redux";
-import { browserHistory } from "react-router";
 
 import { createDckReducer } from "dck-redux";
 import rootSaga from "./sagas";
@@ -18,9 +17,7 @@ function configureStore(initialState) {
       routing: routerReducer
     }),
     initialState,
-    composeEnhancers(
-      applyMiddleware(sagaMiddleware, routerMiddleware(browserHistory))
-    )
+    composeEnhancers(applyMiddleware(sagaMiddleware))
   );
 }
 
