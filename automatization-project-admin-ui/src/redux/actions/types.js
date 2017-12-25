@@ -1,0 +1,2 @@
+export const USER_LOAD = "USER_LOAD";
+export const RESET_USER_PASSWORD = "RESET_USER_PASSWORD";
