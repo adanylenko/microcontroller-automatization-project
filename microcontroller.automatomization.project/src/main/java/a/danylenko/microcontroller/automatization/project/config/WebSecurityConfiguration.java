@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration
     .WebSecurityConfigurerAdapter;
 
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -20,16 +20,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    JwtWebSecurityConfigurer
-        .forRS256(audience, issuer)
-        .configure(http)
-        .cors().and().csrf().disable()
-        .authorizeRequests()
-        .antMatchers("/health")
-        .permitAll()
-        .and()
-        .authorizeRequests()
-        .anyRequest()
-        .fullyAuthenticated();
+    JwtWebSecurityConfigurer.forRS256(audience, issuer).configure(http).cors().and().csrf()
+        .disable().authorizeRequests().antMatchers("/swagger").permitAll().and().authorizeRequests()
+        .anyRequest().fullyAuthenticated();
   }
 }

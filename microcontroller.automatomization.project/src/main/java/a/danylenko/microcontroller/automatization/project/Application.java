@@ -6,8 +6,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 
 
 @SpringBootApplication
-//@ComponentScan(basePackages = "com.auth0.example")
-//@EnableResourceServer
 public class Application {
 
   public static void main(String[] args) {

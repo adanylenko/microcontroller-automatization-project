@@ -2,7 +2,9 @@
 <Configuration>
     <Properties>
         <Property name="filename">logs/microcontroller-automatomization-project.log</Property>
-        <Property name="filePattern">logs/microcontroller-automatomization-project.%d{MM-dd-yyyy}-%i.log</Property>
+        <Property name="filePattern">
+            logs/microcontroller-automatomization-project.%d{MM-dd-yyyy}-%i.log
+        </Property>
         <Property name="pattern">[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c - %msg%n</Property>
     </Properties>
 
@@ -22,7 +24,7 @@
     </Appenders>
 
     <Loggers>
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="FILE"/>
         </Root>

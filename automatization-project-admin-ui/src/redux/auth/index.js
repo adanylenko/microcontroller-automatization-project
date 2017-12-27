@@ -6,7 +6,7 @@ export default class Auth {
     domain: AUTH_CONFIG.domain,
     clientID: AUTH_CONFIG.clientId,
     redirectUri: AUTH_CONFIG.callbackUrl,
-    audience: `https://${AUTH_CONFIG.domain}/userinfo`,
+    audience: AUTH_CONFIG.apiAudience,
     responseType: "token id_token",
     scope: "openid email resource_server"
   });
@@ -18,7 +18,7 @@ export default class Auth {
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.parseHash = this.parseHash.bind(this);
     this.getSessionData = this.getSessionData.bind(this);
-    // this.scheduleRenewal = this.scheduleRenewal.bind(this);
+    this.scheduleRenewal();
   }
 
   handleAuthentication() {
@@ -79,26 +79,26 @@ export default class Auth {
     }
   }
 
-  // renewToken() {
-  //   this.auth0.checkSession({}, (err, result) => {
-  //     if (err) {
-  //       alert(
-  //         `Could not get a new token (${err.error}: ${err.error_description}).`
-  //       );
-  //     } else {
-  //       this.setSession(result);
-  //       alert(`Successfully renewed auth!`);
-  //     }
-  //   });
-  // }
+  renewToken() {
+    this.auth0.checkSession({}, (err, result) => {
+      if (err) {
+        alert(
+          `Could not get a new token (${err.error}: ${err.error_description}).`
+        );
+      } else {
+        this.setSession(result);
+        alert(`Successfully renewed auth!`);
+      }
+    });
+  }
 
-  // scheduleRenewal() {
-  //   const expiresAt = JSON.parse(localStorage.getItem("expires_at"));
-  //   const delay = expiresAt - Date.now();
-  //   if (delay > 0) {
-  //     this.tokenRenewalTimeout = setTimeout(() => {
-  //       this.renewToken();
-  //     }, delay);
-  //   }
-  // }
+  scheduleRenewal() {
+    const expiresAt = JSON.parse(localStorage.getItem("expires_at"));
+    const delay = expiresAt - Date.now();
+    if (delay > 0) {
+      this.tokenRenewalTimeout = setTimeout(() => {
+        this.renewToken();
+      }, delay);
+    }
+  }
 }
