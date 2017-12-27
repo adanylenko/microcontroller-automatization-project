@@ -1,11 +1,12 @@
 package a.danylenko.microcontroller.automatization.project.controllers;
 
+import java.security.Principal;
 import java.util.List;
 
 import a.danylenko.microcontroller.automatization.project.data.entities.Device;
 import a.danylenko.microcontroller.automatization.project.data.entities.Node;
-import a.danylenko.microcontroller.automatization.project.services.repositories.NodeRepository;
 import a.danylenko.microcontroller.automatization.project.services.repositories.DeviceRepository;
+import a.danylenko.microcontroller.automatization.project.services.repositories.NodeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,8 +28,8 @@ public class TestController {
   }
 
   @GetMapping(value = "/testNode")
-  public List<Node> checkServicesHealth() {
-    LOG.debug("rest");
+  public List<Node> checkServicesHealth(final Principal principal) {
+    LOG.debug("rest={}", principal.getName());
 //    return new Node(4, "test", "test2");
     return nodeRepository.findAll();
   }

@@ -2,7 +2,7 @@ package a.danylenko.microcontroller.automatization.project.services.impl;
 
 import java.security.Principal;
 
-import a.danylenko.microcontroller.automatization.project.data.entities.User;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 public final class UserEntityExtractor {

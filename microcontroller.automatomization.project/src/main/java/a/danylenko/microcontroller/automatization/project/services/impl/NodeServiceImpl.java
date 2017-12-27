@@ -2,13 +2,12 @@ package a.danylenko.microcontroller.automatization.project.services.impl;
 
 import java.util.List;
 
-import a.danylenko.microcontroller.automatization.project.services.repositories.NodeRepository;
 import a.danylenko.microcontroller.automatization.project.data.entities.Node;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 import a.danylenko.microcontroller.automatization.project.services.NodeService;
-import a.danylenko.microcontroller.automatization.project.services.UserService;
+import a.danylenko.microcontroller.automatization.project.services.repositories.NodeRepository;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +15,11 @@ import org.slf4j.LoggerFactory;
 public class NodeServiceImpl implements NodeService {
   private final Logger LOG = LoggerFactory.getLogger(NodeServiceImpl.class);
   private final NodeRepository nodeRepository;
-  private final UserService userService;
+//  private final UserService userService;
 
-  public NodeServiceImpl(final NodeRepository nodeRepository, final UserService userService) {
+  public NodeServiceImpl(final NodeRepository nodeRepository) {
     this.nodeRepository = nodeRepository;
-    this.userService = userService;
+//    this.userService = userService;
   }
 
   @Override
@@ -51,7 +50,7 @@ public class NodeServiceImpl implements NodeService {
     Preconditions.checkNotNull(item.getUserId(), "Node url can't be null");
 
     try {
-      userService.getUserById(item.getUserId());
+//      userService.getUserById(item.getUserId());
       getByUrlAndUserId(item.getUrl(), item.getUserId());
       LOG.debug("Error when try to add node with url={} and userId={}.\n Node already exists.",
           item.getUrl(), item.getUserId());

@@ -8,7 +8,7 @@ export default class Auth {
     redirectUri: AUTH_CONFIG.callbackUrl,
     audience: `https://${AUTH_CONFIG.domain}/userinfo`,
     responseType: "token id_token",
-    scope: "openid"
+    scope: "openid email resource_server"
   });
 
   constructor() {
@@ -17,6 +17,8 @@ export default class Auth {
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.parseHash = this.parseHash.bind(this);
+    this.getSessionData = this.getSessionData.bind(this);
+    // this.scheduleRenewal = this.scheduleRenewal.bind(this);
   }
 
   handleAuthentication() {
@@ -40,13 +42,15 @@ export default class Auth {
 
   setSession(authResult) {
     // Set the time that the access token will expire at
-    let expiresAt = JSON.stringify(
+    const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime()
     );
     localStorage.setItem("access_token", authResult.accessToken);
     localStorage.setItem("id_token", authResult.idToken);
     localStorage.setItem("expires_at", expiresAt);
+    localStorage.setItem("email", authResult.idTokenPayload.email);
     // navigate to the home route
+    // this.scheduleRenewal();
   }
 
   logout() {
@@ -61,4 +65,40 @@ export default class Auth {
     let expiresAt = JSON.parse(localStorage.getItem("expires_at"));
     return new Date().getTime() < expiresAt;
   }
+
+  getSessionData() {
+    if (this.isAuthenticated()) {
+      return {
+        access_token: localStorage.getItem("access_token"),
+        id_token: localStorage.getItem("id_token"),
+        expires_at: localStorage.getItem("expires_at"),
+        email: localStorage.getItem("email")
+      };
+    } else {
+      return undefined;
+    }
+  }
+
+  // renewToken() {
+  //   this.auth0.checkSession({}, (err, result) => {
+  //     if (err) {
+  //       alert(
+  //         `Could not get a new token (${err.error}: ${err.error_description}).`
+  //       );
+  //     } else {
+  //       this.setSession(result);
+  //       alert(`Successfully renewed auth!`);
+  //     }
+  //   });
+  // }
+
+  // scheduleRenewal() {
+  //   const expiresAt = JSON.parse(localStorage.getItem("expires_at"));
+  //   const delay = expiresAt - Date.now();
+  //   if (delay > 0) {
+  //     this.tokenRenewalTimeout = setTimeout(() => {
+  //       this.renewToken();
+  //     }, delay);
+  //   }
+  // }
 }

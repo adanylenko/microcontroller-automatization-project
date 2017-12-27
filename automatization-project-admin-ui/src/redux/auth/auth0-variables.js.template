@@ -1,5 +1,5 @@
 export const AUTH_CONFIG = {
   domain: "oauth0_doamin",
   clientId: "oauth0_clientId",
-  callbackUrl: "http://localhost:3000/"
+  callbackUrl: "http://localhost:3000/callback"
 };
