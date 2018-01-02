@@ -8,13 +8,11 @@ import "font-awesome/css/font-awesome.min.css";
 import { IntlProvider } from "react-intl";
 import { DckActionCreators } from "dck-redux";
 import PropTypes from "prop-types";
-import createHistory from "history/createBrowserHistory";
 
 import registerServiceWorker from "./registerServiceWorker";
 import App from "./components/App";
 import "./index.css";
 import { store, history } from "./redux/store";
-import ActionCreators from "./redux/actions";
 import Callback from "./components/Callback";
 
 class RootComponent extends Component {
@@ -37,7 +35,7 @@ ReactDOM.render(
       <IntlProvider locale="en">
         <RootComponent>
           <Router history={history}>
-            <div>
+            <div className="router-container">
               <Route path="/" component={App} />
               <Route path="/callback" component={Callback} />
             </div>

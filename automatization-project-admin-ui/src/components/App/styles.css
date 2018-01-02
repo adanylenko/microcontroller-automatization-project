@@ -1,28 +1,106 @@
-.App {
+.sidebar {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: block;
+
+  overflow-x: hidden;
+  overflow-y: hidden;
+
+  padding: 5px 15px;
+  margin: 0px;
+  border-right-color: black;
+  border-right-width: 1px;
+  border-right-style: solid;
+  position: fixed;
+  background-color: #003a06;
+}
+
+.sidebar-container {
+  height: 100%;
+}
+
+.sidebar-header {
+  margin-bottom: 24px;
+  color: #e0e0e0;
+}
+
+.sidebarItems {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-item {
+  list-style: none;
+  margin: 24px 0px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.sidebar-item a {
+  color: #878787;
+}
+
+.sidebar-item a:hover,
+.sidebar-item > a:hover,
+.sidebar-item > a.active {
+  text-decoration: none;
+}
+
+.sidebar-item > a.active {
+  font-weight: bold;
+  color: #e0e0e0;
+}
+
+.sidebar-item-icon-container {
+  display: inline-block;
+  width: 32px;
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+/* .show-sidebar-button-container {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: block;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  padding-top: 20px;
+  padding-left: 5px;
+  margin: 0px;
+  border-right-color: green;
+  border-right-width: 1px;
+  border-right-style: solid;
+  position: fixed;
+  background-color: green;
+  width: 60px;
+} */
+
+/* .show-sidebar-button,
+.hide-sidebar-button {
+  color: black;
+  outline: none;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.hide-sidebar-button {
+  position: absolute;
+  right: 7px;
+  top: 30px;
+} */
+
+.logout-button {
+  bottom: 0px;
+  position: fixed;
+  margin-bottom: 24px;
+  text-align: center;
 }
 
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.logout-button a {
+  cursor: pointer;
+  color: #010328;
 }
