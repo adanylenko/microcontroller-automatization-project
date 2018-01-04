@@ -11,7 +11,8 @@ import "./styles.css";
 
 class App extends Component {
   static propTypes = {
-    sessionData: PropTypes.object
+    sessionData: PropTypes.object,
+    signOut: PropTypes.func.isRequired
   };
 
   render() {
@@ -36,7 +37,7 @@ class App extends Component {
 
   renderSidebar() {
     return (
-      <Row bsClass="app-container row">
+      <Row className="app-container">
         <Col xs={5} sm={3} md={2} lg={2} className="sidebar">
           <Sidebar headerComponent={this.renderSidebarHeader()}>
             <SidebarItem
@@ -57,7 +58,7 @@ class App extends Component {
           <div className="logout-button">
             <a
               onClick={() => {
-                // this.props.signOut();
+                this.props.signOut();
                 console.log("logout");
               }}
             >
@@ -75,7 +76,7 @@ class App extends Component {
           smOffset={3}
           mdOffset={2}
           lgOffset={2}
-          bsClass="main-content"
+          className="main-content"
         >
           {this.props.children}
         </Col>
@@ -93,7 +94,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return { signOut: () => dispatch(DckActionCreators.signOut()) };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

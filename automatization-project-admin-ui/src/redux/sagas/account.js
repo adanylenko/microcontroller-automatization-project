@@ -1,4 +1,12 @@
-import { takeEvery, all, put, call, select, cps } from "redux-saga/effects";
+import {
+  takeEvery,
+  all,
+  put,
+  call,
+  select,
+  cps,
+  take
+} from "redux-saga/effects";
 import { DckActionTypes, DckSelectors } from "dck-redux";
 import { push, replace } from "react-router-redux";
 import * as ActionTypes from "../actions/types";
@@ -33,42 +41,25 @@ function* initAppSaga() {
   });
 
   const currentPath = yield select(pathSelector);
-  if (currentPath === "/callback") {
-    yield put(replace("/"));
+  if (currentPath === "/callback" || currentPath === "/") {
+    yield put(replace("/nodes"));
   }
-}
-
-function* checkAuthenticatedSaga() {
-  const sessionData = yield call(getSessionData);
-
-  if (sessionData == null) {
-    // yield put(push("/sign-in"));
-  }
-}
-
-function* signIn(props) {
-  // if (/access_token|id_token|error/.test(path)) {
-  //   console.log("handle");
-  //   auth.handleAuthentication();
-  // }
-  // yield call(login);
-
-  console.log(props);
-}
-
-function* initUserSession() {
-  // const result = yield call(auth.isAuthenticated);
-  // if (!result) {
-  //   yield call(auth.login);
-  // }
-}
-
-function* processCallback() {
-  yield put(push("/"));
 }
 
 export function* getSessionData() {
-  return yield select(DckSelectors.selectSessionData);
+  return yield call(auth.getSessionData);
+}
+
+export function* signOut() {
+  yield put({
+    type: DckActionTypes.INITIALIZE_USER_SESSION,
+    sessionData: {},
+    authenticated: false
+  });
+
+  yield call(auth.logout);
+  yield put(push("/"));
+  yield call(initAppSaga);
 }
 
 function* accountSaga() {
@@ -77,9 +68,7 @@ function* accountSaga() {
       action => action.type === DckActionTypes.INITIALIZE_APP,
       initAppSaga
     ),
-    takeEvery(DckActionTypes.CHECK_AUTHENTICATED, checkAuthenticatedSaga),
-    takeEvery(DckActionTypes.INITIALIZE_USER_SESSION, initUserSession),
-    takeEvery(ActionTypes.PROCESS_CALLBACK, processCallback)
+    takeEvery(DckActionTypes.SIGN_OUT, signOut)
   ]);
 }
 

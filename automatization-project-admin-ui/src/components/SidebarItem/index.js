@@ -16,15 +16,6 @@ export class SidebarItem extends Component {
     textClass: PropTypes.any
   };
 
-  // public static defaultProps: Partial<SidebarItemProps> = {
-  //   itemClass: "sidebar-item",
-  //   activeClass: "active",
-  //   iconContainerClass: "sidebar-item-icon-container",
-  //   iconSize: "lg",
-  //   textClass: "sidebar-item-text",
-  //   external: false
-  // };
-
   renderInternalLink() {
     return (
       <NavLink to={this.props.to} activeClassName="active">

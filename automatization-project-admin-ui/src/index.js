@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { Router, Route } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import { ConnectedRouter } from "react-router-redux";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.min.css";
@@ -13,7 +13,8 @@ import registerServiceWorker from "./registerServiceWorker";
 import App from "./components/App";
 import "./index.css";
 import { store, history } from "./redux/store";
-import Callback from "./components/Callback";
+
+import Nodes from "./components/Nodes";
 
 class RootComponent extends Component {
   static propTypes = {
@@ -35,10 +36,9 @@ ReactDOM.render(
       <IntlProvider locale="en">
         <RootComponent>
           <Router history={history}>
-            <div className="router-container">
-              <Route path="/" component={App} />
-              <Route path="/callback" component={Callback} />
-            </div>
+            <App>
+              <Route path="/nodes" component={Nodes} />
+            </App>
           </Router>
         </RootComponent>
       </IntlProvider>
