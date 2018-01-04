@@ -1,5 +1,65 @@
-body {
+:root {
+  --main-bg-color: #f4f4f4;
+  --sidebar-bg-color: #003a06;
+  --sidebar-item-color: #878787;
+  --sidebar-active-item-color: #e0e0e0;
+  --header-bg-color: #ffffff;
+}
+
+html,
+body,
+.root,
+.init-container,
+.router-container,
+.app-container {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--main-bg-color);
+}
+
+.progress-overlay-wrapper {
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 2000 !important;
+  margin-left: 0px important;
+}
+
+.progress-overlay-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+  font-size: 2em;
+}
+
+.page-header-container {
+  display: block;
+  padding: 10px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--header-bg-color);
+  background-color: var(--header-bg-color);
+}
+
+.page-content {
+  padding: 10px;
+}
+
+.button-link {
+  cursor: pointer;
+}
+
+.text-right {
+  display: block;
+  width: 100%;
+  text-align: right;
+  padding: 0px 5px;
 }

@@ -1,23 +1,20 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { Router, Route, IndexRedirect, IndexRoute } from "react-router";
-import { syncHistoryWithStore } from "react-router-redux";
+import { Router, Route, Switch } from "react-router-dom";
+import { ConnectedRouter } from "react-router-redux";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.min.css";
 import { IntlProvider } from "react-intl";
 import { DckActionCreators } from "dck-redux";
 import PropTypes from "prop-types";
-import createHistory from "history/createBrowserHistory";
 
 import registerServiceWorker from "./registerServiceWorker";
 import App from "./components/App";
 import "./index.css";
-import store from "./redux/store";
-import ActionCreators from "./redux/actions";
-import Callback from "./components/Callback";
+import { store, history } from "./redux/store";
 
-const history = syncHistoryWithStore(createHistory(), store);
+import Nodes from "./components/Nodes";
 
 class RootComponent extends Component {
   static propTypes = {
@@ -35,28 +32,17 @@ class RootComponent extends Component {
 
 ReactDOM.render(
   <Provider store={store}>
-    <RootComponent>
+    <ConnectedRouter history={history}>
       <IntlProvider locale="en">
-        <Router history={history}>
-          <div>
-            <Route
-              path="/"
-              render={() => {
-                store.dispatch(DckActionCreators.initializeUserSession());
-                return <App />;
-              }}
-            />
-            <Route
-              path="/callback"
-              render={() => {
-                store.dispatch(ActionCreators.processCallback());
-                return <Callback />;
-              }}
-            />
-          </div>
-        </Router>
+        <RootComponent>
+          <Router history={history}>
+            <App>
+              <Route path="/nodes" component={Nodes} />
+            </App>
+          </Router>
+        </RootComponent>
       </IntlProvider>
-    </RootComponent>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById("root")
 );

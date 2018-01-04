@@ -1,28 +1,83 @@
-.App {
+.sidebar {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: block;
+
+  overflow-x: hidden;
+  overflow-y: hidden;
+
+  padding: 5px 15px;
+  margin: 0px;
+  border-right-color: black;
+  border-right-width: 1px;
+  border-right-style: solid;
+  position: fixed;
+  background-color: var(--sidebar-bg-color);
+}
+
+.sidebar-container {
+  height: 100%;
+}
+
+.sidebar-header {
+  margin-bottom: 24px;
+  color: var(--sidebar-active-item-color);
+}
+
+.sidebarItems {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-item {
+  list-style: none;
+  margin: 24px 0px;
+  text-align: left;
+  font-size: 12px;
+}
+
+.sidebar-item a {
+  color: var(--sidebar-item-color);
+}
+
+.sidebar-item a:hover,
+.sidebar-item > a:hover,
+.sidebar-item > a.active {
+  text-decoration: none;
+}
+
+.sidebar-item > a.active {
+  font-weight: bold;
+  color: var(--sidebar-active-item-color);
+}
+
+.sidebar-items-container {
+  padding-left: 5px;
+}
+
+.sidebar-item-icon-container {
+  display: inline-block;
+  width: 32px;
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.logout-button {
+  bottom: 0px;
+  position: fixed;
+  margin-bottom: 24px;
+  text-align: center;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.logout-button a {
+  cursor: pointer;
+  color: var(--sidebar-item-color);
 }
 
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.main-content {
+  height: 100%;
+  padding-left: 0px;
+  padding-right: 0px;
 }

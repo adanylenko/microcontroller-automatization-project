@@ -2,14 +2,12 @@ package a.danylenko.microcontroller.automatization.project.controllers;
 
 import java.security.Principal;
 
-import a.danylenko.microcontroller.automatization.project.data.entities.User;
 import a.danylenko.microcontroller.automatization.project.data.entities.Node;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 import a.danylenko.microcontroller.automatization.project.services.NodeService;
 import a.danylenko.microcontroller.automatization.project.services.impl.ResponseService;
-import a.danylenko.microcontroller.automatization.project.services.impl.UserEntityExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -38,28 +36,25 @@ public class NodeController {
   @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping("/list")
   public ResponseEntity<?> getUserNodes(final Principal principal) {
-    final User user = UserEntityExtractor.fromOAuth2Principal(principal);
-    LOG.debug("Get all nodes for user with id={}", user.getId());
-    return ResponseService
-        .success("Get node request by userId success", nodeService.getNodesByUserId(user.getId()));
+    LOG.debug("Get all nodes for user with id={}", principal.getName());
+    return ResponseService.success("Get node request by userId success",
+        nodeService.getNodesByUserId(principal.getName()));
   }
 
   @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping("/{nodeId}")
   public ResponseEntity<?> getUserNodeById(@PathVariable("nodeId") final String nodeId,
       final Principal principal) throws NoSuchItemException {
-    final User user = UserEntityExtractor.fromOAuth2Principal(principal);
-    LOG.debug("Get node by id={} and userId={}", nodeId, user.getId());
+    LOG.debug("Get node by id={} and userId={}", nodeId, principal.getName());
     return ResponseService.success("Get node by id request success",
-        nodeService.getByIdAndUserId(nodeId, user.getId()));
+        nodeService.getByIdAndUserId(nodeId, principal.getName()));
   }
 
   @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @PutMapping("/")
   public ResponseEntity<?> addUserNode(@RequestBody final Node node, final Principal principal)
       throws ItemAlreadyExistsException, NoSuchUserException, NoSuchItemException {
-    final User user = UserEntityExtractor.fromOAuth2Principal(principal);
-    node.setUserId(user.getId());
+    node.setUserId(principal.getName());
 
     LOG.debug("Add node with url={}, name={}, userId={}", node.getUrl(), node.getName(),
         node.getUserId());
@@ -72,9 +67,8 @@ public class NodeController {
   @DeleteMapping("/")
   public ResponseEntity<?> deleteUserNode(@RequestParam("nodeId") final String nodeId,
       final Principal principal) throws NoSuchItemException {
-    final User user = UserEntityExtractor.fromOAuth2Principal(principal);
-    LOG.debug("Delete node with id={}, userId={}", nodeId, user.getId());
-    nodeService.deleteNodeByIdAndUserId(nodeId, user.getId());
+    LOG.debug("Delete node with id={}, userId={}", nodeId, principal.getName());
+    nodeService.deleteNodeByIdAndUserId(nodeId, principal.getName());
     return ResponseService.success("Node deleted success");
   }
 
@@ -82,8 +76,7 @@ public class NodeController {
   @PostMapping("/")
   public ResponseEntity<?> updateUserNode(@RequestBody final Node node, final Principal principal)
       throws ItemAlreadyExistsException, NoSuchItemException {
-    final User user = UserEntityExtractor.fromOAuth2Principal(principal);
-    node.setUserId(user.getId());
+    node.setUserId(principal.getName());
 
     LOG.debug("Update node with url={}, name={}, userId={}", node.getUrl(), node.getName(),
         node.getUserId());
