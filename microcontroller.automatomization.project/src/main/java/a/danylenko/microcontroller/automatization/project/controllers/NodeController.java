@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "node")
+@RequestMapping(value = "nodes")
 public class NodeController {
   private static final Logger LOG = LoggerFactory.getLogger(NodeController.class);
   private final NodeService nodeService;
@@ -32,27 +32,23 @@ public class NodeController {
     this.nodeService = nodeService;
   }
 
-  /*User endpoints*/
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-  @GetMapping("/list")
+  @GetMapping("/")
   public ResponseEntity<?> getUserNodes(final Principal principal) {
     LOG.debug("Get all nodes for user with id={}", principal.getName());
     return ResponseService.success("Get node request by userId success",
         nodeService.getNodesByUserId(principal.getName()));
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping("/{nodeId}")
-  public ResponseEntity<?> getUserNodeById(@PathVariable("nodeId") final String nodeId,
+  public ResponseEntity<?> getNodesUserById(@PathVariable("nodeId") final String nodeId,
       final Principal principal) throws NoSuchItemException {
     LOG.debug("Get node by id={} and userId={}", nodeId, principal.getName());
     return ResponseService.success("Get node by id request success",
         nodeService.getByIdAndUserId(nodeId, principal.getName()));
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @PutMapping("/")
-  public ResponseEntity<?> addUserNode(@RequestBody final Node node, final Principal principal)
+  public ResponseEntity<?> addNode(@RequestBody final Node node, final Principal principal)
       throws ItemAlreadyExistsException, NoSuchUserException, NoSuchItemException {
     node.setUserId(principal.getName());
 
@@ -63,18 +59,16 @@ public class NodeController {
     return ResponseService.success("Node added success");
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @DeleteMapping("/")
-  public ResponseEntity<?> deleteUserNode(@RequestParam("nodeId") final String nodeId,
+  public ResponseEntity<?> deleteNode(@RequestParam("nodeId") final String nodeId,
       final Principal principal) throws NoSuchItemException {
     LOG.debug("Delete node with id={}, userId={}", nodeId, principal.getName());
     nodeService.deleteNodeByIdAndUserId(nodeId, principal.getName());
     return ResponseService.success("Node deleted success");
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @PostMapping("/")
-  public ResponseEntity<?> updateUserNode(@RequestBody final Node node, final Principal principal)
+  public ResponseEntity<?> updateNode(@RequestBody final Node node, final Principal principal)
       throws ItemAlreadyExistsException, NoSuchItemException {
     node.setUserId(principal.getName());
 
@@ -83,65 +77,5 @@ public class NodeController {
     nodeService.update(node);
 
     return ResponseService.success("Node added success");
-  }
-
-  /*Admin endpoints*/
-
-
-  @PreAuthorize("hasAnyAuthority('ADMIN')")
-  @GetMapping("/admin/list")
-  public ResponseEntity<?> getAllNodesAdmin() {
-    LOG.debug("Get all nodes admin request");
-    return ResponseService.success("Get node admin request success", nodeService.getAll());
-  }
-
-  @PreAuthorize("hasAnyAuthority('ADMIN')")
-  @GetMapping("/admin/{nodeId}")
-  public ResponseEntity<?> getNodeByIdAdmin(@PathVariable("nodeId") final String nodeId)
-      throws NoSuchItemException {
-    LOG.debug("Get node by id={} admin", nodeId);
-    return ResponseService
-        .success("Get node by id admin request success", nodeService.getById(nodeId));
-  }
-
-  @PreAuthorize("hasAnyAuthority('ADMIN')")
-  @PutMapping("/admin")
-  public ResponseEntity<?> addNodeAdmin(@RequestBody final Node node)
-      throws ItemAlreadyExistsException, NoSuchUserException, NoSuchItemException {
-    LOG.debug("Add node with url={}, name={}, userId={}", node.getUrl(), node.getName(),
-        node.getUserId());
-    nodeService.add(node);
-
-    return ResponseService.success("Admin node added success");
-  }
-
-  @PreAuthorize("hasAnyAuthority('ADMIN')")
-  @DeleteMapping("/admin")
-  public ResponseEntity<?> deleteNodeAdmin(@RequestParam("nodeId") final String nodeId)
-      throws NoSuchItemException {
-    LOG.debug("Delete node with id={}", nodeId);
-    nodeService.delete(nodeId);
-    return ResponseService.success("Admin node deleted success");
-  }
-
-  @PreAuthorize("hasAnyAuthority('ADMIN')")
-  @PostMapping("/admin")
-  public ResponseEntity<?> updateNodeAdmin(@RequestBody final Node node)
-      throws ItemAlreadyExistsException, NoSuchItemException {
-
-    LOG.debug("Update node admin with url={}, name={}, userId={}", node.getUrl(), node.getName(),
-        node.getUserId());
-    nodeService.update(node);
-
-    return ResponseService.success("Admin node updated success");
-  }
-
-  /*Both*/
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-  @GetMapping("/status/{nodeId}")
-  public ResponseEntity<?> getNodeStatus(@RequestParam("nodeId") final String nodeId) {
-    LOG.debug("Get node status with id={}", nodeId);
-
-    return ResponseService.success("Node status request success", nodeService.isNodeActive(nodeId));
   }
 }

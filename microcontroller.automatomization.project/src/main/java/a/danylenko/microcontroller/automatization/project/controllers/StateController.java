@@ -1,15 +1,14 @@
 package a.danylenko.microcontroller.automatization.project.controllers;
 
 import a.danylenko.microcontroller.automatization.project.data.entities.State;
-import a.danylenko.microcontroller.automatization.project.services.StateService;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
+import a.danylenko.microcontroller.automatization.project.services.StateService;
 import a.danylenko.microcontroller.automatization.project.services.impl.ResponseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "state")
+@RequestMapping(value = "states")
 public class StateController {
   private static final Logger LOG = LoggerFactory.getLogger(StateController.class);
   private final StateService stateService;
@@ -29,7 +28,6 @@ public class StateController {
     this.stateService = stateService;
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping("/list/{commandId}")
   public ResponseEntity<?> getCommandStates(@PathVariable("commandId") final String commandId) {
     LOG.debug("Get all states for command with id={}", commandId);
@@ -37,14 +35,6 @@ public class StateController {
         stateService.getStatesByCommandId(commandId));
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN')")
-  @GetMapping("/list")
-  public ResponseEntity<?> getAllCommands() {
-    LOG.debug("Get all commands");
-    return ResponseService.success("Get all states request success", stateService.getAll());
-  }
-
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping("/{stateId}")
   public ResponseEntity<?> getStateById(@PathVariable("stateId") final String stateId)
       throws NoSuchItemException {
@@ -52,7 +42,6 @@ public class StateController {
     return ResponseService.success("Get state success", stateService.getById(stateId));
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @PutMapping("/")
   public ResponseEntity<?> addState(@RequestBody final State state)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
@@ -61,7 +50,6 @@ public class StateController {
     return ResponseService.success("Add state success");
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @DeleteMapping("/{stateId}")
   public ResponseEntity<?> deleteStateById(@PathVariable("stateId") final String stateId)
       throws NoSuchItemException {
@@ -70,7 +58,6 @@ public class StateController {
     return ResponseService.success("State deleted success");
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @PostMapping("/")
   public ResponseEntity<?> updateState(@RequestBody final State state)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {

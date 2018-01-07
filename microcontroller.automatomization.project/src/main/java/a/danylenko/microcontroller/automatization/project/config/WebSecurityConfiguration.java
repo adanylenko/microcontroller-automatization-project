@@ -20,7 +20,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    JwtWebSecurityConfigurer.forRS256(audience, issuer).configure(http).cors().and().csrf()
+    JwtWebSecurityConfigurer.forRS256(audience, issuer).configure(http).csrf()
         .disable().authorizeRequests().antMatchers("/swagger").permitAll().and().authorizeRequests()
         .anyRequest().fullyAuthenticated();
   }

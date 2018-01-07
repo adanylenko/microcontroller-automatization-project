@@ -9,7 +9,6 @@ import a.danylenko.microcontroller.automatization.project.services.impl.Response
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "command")
+@RequestMapping(value = "commands")
 public class CommandController {
   private static final Logger LOG = LoggerFactory.getLogger(CommandController.class);
   private final CommandService commandService;
@@ -29,7 +28,6 @@ public class CommandController {
     this.commandService = commandService;
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping("/list/{deviceId}")
   public ResponseEntity<?> getDeviceCommands(@PathVariable("deviceId") final String deviceId) {
     LOG.debug("Get all commands for device with id={}", deviceId);
@@ -37,14 +35,6 @@ public class CommandController {
         commandService.getCommandsByDeviceId(deviceId));
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN')")
-  @GetMapping("/list")
-  public ResponseEntity<?> getAllCommands() {
-    LOG.debug("Get all commands");
-    return ResponseService.success("Get all commands request success", commandService.getAll());
-  }
-
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @GetMapping("/{commandId}")
   public ResponseEntity<?> getCommandById(@PathVariable("commandId") final String commandId)
       throws NoSuchItemException {
@@ -52,7 +42,6 @@ public class CommandController {
     return ResponseService.success("Get command success", commandService.getById(commandId));
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @PutMapping("/")
   public ResponseEntity<?> addCommand(@RequestBody final Command command)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
@@ -61,7 +50,6 @@ public class CommandController {
     return ResponseService.success("Add command success");
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @DeleteMapping("/{commandId}")
   public ResponseEntity<?> deleteCommandById(@PathVariable("commandId") final String commandId)
       throws NoSuchItemException {
@@ -70,7 +58,6 @@ public class CommandController {
     return ResponseService.success("Command deleted success");
   }
 
-  @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
   @PostMapping("/")
   public ResponseEntity<?> updateCommand(@RequestBody final Command command)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
