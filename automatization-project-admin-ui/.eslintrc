@@ -1,0 +1,25 @@
+{
+  "extends": ["eslint:recommended", "plugin:react/recommended", "react-app"],
+  "plugins": ["prettier", "react", "import"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "off"
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "generators": true,
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    }
+  }
+}

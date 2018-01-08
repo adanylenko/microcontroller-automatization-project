@@ -6,13 +6,21 @@ import { DckActionCreators, DckSelectors } from "dck-redux";
 import { ProgressOverlay, InternalPage } from "dck-react-components";
 import { TableHeaderColumn } from "react-bootstrap-table";
 import { NavLink } from "react-router-dom";
-//import * as FontAwesome from "react-fontawesome";
+import * as FontAwesome from "react-fontawesome";
 
 import * as ItemTypes from "../../redux/items/types";
 import * as ProcessTypes from "../../redux/processes/types";
 import SmartTable from "../SmartTable";
 
+import NodeAdd from "./Add";
+
 export class Nodes extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { addNodeShow: false };
+  }
+
   static propTypes = {
     loadNodes: PropTypes.func.isRequired,
     nodesLoading: PropTypes.bool,
@@ -36,11 +44,15 @@ export class Nodes extends Component {
             <a
               className="button-link text-right"
               onClick={() => {
-                console.log;
+                this.setState({ addNodeShow: true });
               }}
             >
               Add Node
             </a>
+            <NodeAdd
+              showModal={this.state.addNodeShow}
+              hideModal={() => this.setState({ addNodeShow: false })}
+            />
           </span>
         }
       >
@@ -49,7 +61,12 @@ export class Nodes extends Component {
           items={this.props.nodes ? this.props.nodes : []}
           loading={this.props.nodesLoading}
         >
-          <TableHeaderColumn dataField="id" dataAlign="center" isKey={true}>
+          <TableHeaderColumn
+            dataField="id"
+            dataAlign="center"
+            isKey={true}
+            hidden
+          >
             Id
           </TableHeaderColumn>
           <TableHeaderColumn dataField="url" dataAlign="center">
@@ -59,22 +76,20 @@ export class Nodes extends Component {
             Name
           </TableHeaderColumn>
           {
-            //<TableHeaderColumn
-            //dataField="edit"
-            //dataAlign="center"
-            //dataFormat={(cell, x) => (
-            //  <a
-            //    className="button-link"
-            //    onClick={() => {
-            //      console.log("edit");
-            //    }}
-            //  >
-            //    Edit
-            //  </a>
-            //)}
-            //>
-            // Is online?
-            //</TableHeaderColumn>
+            <TableHeaderColumn
+              dataField="edit"
+              dataAlign="center"
+              dataFormat={(cell, x) => (
+                <span>
+                  <FontAwesome
+                    name="circle"
+                    className={x.online ? "green" : "red"}
+                  />
+                </span>
+              )}
+            >
+              Is online?
+            </TableHeaderColumn>
           }
           <TableHeaderColumn
             dataField="edit"

@@ -14,7 +14,6 @@ export function* loadNodesSaga() {
 
   try {
     const sessionData = yield call(getSessionData);
-    console.log("session data=", sessionData);
     const response = yield call(RestApi.ListNodes, sessionData.access_token);
 
     yield put({
@@ -30,9 +29,39 @@ export function* loadNodesSaga() {
       }
     });
   } catch (error) {
+    console.log("Error get nodes=", error);
+
     yield put({
       type: DckActionTypes.ASYNC_PROCESS_STOP,
       processCode: ProcessTypes.NODES_LOAD,
+      result: {
+        success: false
+      }
+    });
+  }
+}
+
+function* addNodeSaga(action) {
+  yield put({
+    type: DckActionTypes.ASYNC_PROCESS_START,
+    processCode: ProcessTypes.NODES_ADD
+  });
+
+  try {
+    const sessionData = yield call(getSessionData);
+    yield call(RestApi.AddNode, sessionData.access_token, action.data);
+    yield put({
+      type: DckActionTypes.ASYNC_PROCESS_STOP,
+      processCode: ProcessTypes.NODES_ADD,
+      result: {
+        success: true
+      }
+    });
+  } catch (error) {
+    console.log("Error when try to add node=", error);
+    yield put({
+      type: DckActionTypes.ASYNC_PROCESS_STOP,
+      processCode: ProcessTypes.NODES_ADD,
       result: {
         success: false
       }
@@ -47,6 +76,12 @@ function* nodesSaga() {
         action.type === DckActionTypes.ITEMS_LOAD &&
         action.itemType === ItemTypes.Node,
       loadNodesSaga
+    ),
+    takeEvery(
+      action =>
+        action.type === DckActionTypes.ITEM_ADD &&
+        action.itemType === ItemTypes.Node,
+      addNodeSaga
     )
   ]);
 }

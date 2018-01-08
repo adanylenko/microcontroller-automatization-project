@@ -28,8 +28,11 @@ export function ApiCall(url, idToken, body, method = "POST") {
 }
 
 export const RestApi = {
-  ListNodes: (idToken, clientId) => {
+  ListNodes: idToken => {
     return ApiCall(RestUrls.NODES_URL, idToken, null, "GET");
+  },
+  AddNode: (idToken, node) => {
+    return ApiCall(RestUrls.NODES_URL, idToken, node, "PUT");
   }
 };
 

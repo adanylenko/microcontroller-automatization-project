@@ -41,7 +41,10 @@ function* initAppSaga() {
   });
 
   const currentPath = yield select(pathSelector);
-  if (currentPath === "/callback" || currentPath === "/") {
+  if (currentPath === "/callback") {
+    yield put(replace("/nodes"));
+    window.location.reload();
+  } else if (currentPath === "/") {
     yield put(replace("/nodes"));
   }
 }
