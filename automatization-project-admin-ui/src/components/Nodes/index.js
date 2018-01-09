@@ -13,20 +13,21 @@ import * as ProcessTypes from "../../redux/processes/types";
 import SmartTable from "../SmartTable";
 
 import NodeAdd from "./Add";
+import NodeEdit from "./Edit";
 
 export class Nodes extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { addNodeShow: false };
+    this.state = { addNodeShow: false, editNodeShow: false };
   }
 
   static propTypes = {
     loadNodes: PropTypes.func.isRequired,
     nodesLoading: PropTypes.bool,
     nodes: PropTypes.array,
-    addNode: PropTypes.func.isRequired,
-    editNode: PropTypes.func.isRequired
+    makeNodeActive: PropTypes.func.isRequired,
+    deleteNode: PropTypes.func.isRequired
   };
 
   componentWillMount() {
@@ -37,29 +38,15 @@ export class Nodes extends Component {
     return this.props.nodesLoading ? (
       <ProgressOverlay visible={true}>Loading nodes...</ProgressOverlay>
     ) : (
-      <InternalPage
-        title="Nodes management"
-        headerComponent={
-          <span className="text-right">
-            <a
-              className="button-link text-right"
-              onClick={() => {
-                this.setState({ addNodeShow: true });
-              }}
-            >
-              Add Node
-            </a>
-            <NodeAdd
-              showModal={this.state.addNodeShow}
-              hideModal={() => this.setState({ addNodeShow: false })}
-            />
-          </span>
-        }
-      >
+      <InternalPage title="Nodes management">
         <SmartTable
           className="add-new-location"
           items={this.props.nodes ? this.props.nodes : []}
           loading={this.props.nodesLoading}
+          selectedHandler={id => this.props.makeNodeActive(id)}
+          editClick={() => this.setState({ editNodeShow: true })}
+          addClick={() => this.setState({ addNodeShow: true })}
+          deleteClick={node => this.props.deleteNode(node.id)}
         >
           <TableHeaderColumn
             dataField="id"
@@ -91,21 +78,15 @@ export class Nodes extends Component {
               Is online?
             </TableHeaderColumn>
           }
-          <TableHeaderColumn
-            dataField="edit"
-            dataAlign="center"
-            dataFormat={(cell, x) => (
-              <a
-                className="button-link"
-                onClick={() => {
-                  console.log("edit");
-                }}
-              >
-                Edit
-              </a>
-            )}
-          />
         </SmartTable>
+        <NodeAdd
+          showModal={this.state.addNodeShow}
+          hideModal={() => this.setState({ addNodeShow: false })}
+        />
+        <NodeEdit
+          showModal={this.state.editNodeShow}
+          hideModal={() => this.setState({ editNodeShow: false })}
+        />
       </InternalPage>
     );
   }
@@ -126,12 +107,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     loadNodes: () => dispatch(DckActionCreators.itemsLoad(ItemTypes.Node)),
-    addNode: data => {
-      console.log("add node=", data);
-    },
-    editNode: data => {
-      console.log("edit node=", data);
-    }
+    makeNodeActive: id =>
+      dispatch(DckActionCreators.itemMakeActive(ItemTypes.Node, id)),
+    deleteNode: id => dispatch(DckActionCreators.itemRemove(ItemTypes.Node, id))
   };
 };
 

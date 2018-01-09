@@ -29,10 +29,16 @@ export function ApiCall(url, idToken, body, method = "POST") {
 
 export const RestApi = {
   ListNodes: idToken => {
-    return ApiCall(RestUrls.NODES_URL, idToken, null, "GET");
+    return ApiCall(RestUrls.NODES_URL(), idToken, null, "GET");
   },
   AddNode: (idToken, node) => {
-    return ApiCall(RestUrls.NODES_URL, idToken, node, "PUT");
+    return ApiCall(RestUrls.NODES_URL(), idToken, node, "PUT");
+  },
+  SaveNode: (idToken, id, node) => {
+    return ApiCall(RestUrls.NODES_URL(id), idToken, node, "POST");
+  },
+  RemoveNode: (idToken, id) => {
+    return ApiCall(RestUrls.NODES_URL(id), idToken, null, "DELETE");
   }
 };
 

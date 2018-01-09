@@ -75,3 +75,7 @@ body,
 .modal-dialog-footer button {
   margin: 10px !important;
 }
+
+.tableToolbar button {
+  width: 80px;
+}

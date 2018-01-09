@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col, Button, ButtonToolbar } from "react-bootstrap";
 import { BootstrapTable } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
+
+import RemoveWindow from "../RemoveWindow";
 
 class SmartTable extends Component {
   constructor(props) {
@@ -10,21 +12,26 @@ class SmartTable extends Component {
 
     this.state = {
       showRemoveModal: false,
-      selected: {}
+      itemSelected: false,
+      selectedRow: { id: null },
+      selectRowProp: {
+        mode: "radio",
+        clickToSelect: true,
+        hideSelectColumn: true,
+        bgColor: "#337ab7",
+        onSelect: (row, isSelected, e) => this.onRowSelect(row, isSelected, e)
+      }
     };
   }
 
-  getSelectedItems() {
-    let itemsArray = [];
-    const selectionState = this.state.selected;
-
-    for (let key in selectionState) {
-      if (selectionState.hasOwnProperty(key)) {
-        itemsArray.push(selectionState[key]);
-      }
+  onRowSelect(row, isSelected, e) {
+    if (isSelected === true) {
+      this.setState({
+        selectedRow: row
+      });
+      this.props.selectedHandler(row.id);
     }
-
-    return itemsArray;
+    this.setState({ itemSelected: isSelected });
   }
 
   renderContent() {
@@ -38,10 +45,43 @@ class SmartTable extends Component {
           bordered={true}
           condensed={true}
           responsive={true}
+          pagination
+          selectRow={this.state.selectRowProp}
         >
           {this.props.children}
         </BootstrapTable>
         <br />
+        <ButtonToolbar className="tableToolbar">
+          {this.props.addClick && (
+            <Button bsStyle="primary" onClick={() => this.props.addClick()}>
+              Add
+            </Button>
+          )}
+          {this.props.editClick && (
+            <Button
+              bsStyle="default"
+              onClick={() => this.props.editClick()}
+              disabled={!this.state.itemSelected}
+            >
+              Edit
+            </Button>
+          )}
+          {this.props.deleteClick && (
+            <Button
+              bsStyle="danger"
+              onClick={() => this.setState({ showRemoveModal: true })}
+              disabled={!this.state.itemSelected}
+            >
+              Remove
+            </Button>
+          )}
+        </ButtonToolbar>
+        <RemoveWindow
+          show={this.state.showRemoveModal}
+          close={() => this.setState({ showRemoveModal: false })}
+          title="Delete item"
+          delete={() => this.props.deleteClick(this.state.selectedRow)}
+        />
       </Col>
     );
   }
@@ -64,7 +104,11 @@ class SmartTable extends Component {
 SmartTable.propTypes = {
   loading: PropTypes.bool,
   children: PropTypes.node,
-  items: PropTypes.array.isRequired
+  items: PropTypes.array.isRequired,
+  selectedHandler: PropTypes.func.isRequired,
+  addClick: PropTypes.func,
+  editClick: PropTypes.func,
+  deleteClick: PropTypes.func
 };
 
 export default SmartTable;

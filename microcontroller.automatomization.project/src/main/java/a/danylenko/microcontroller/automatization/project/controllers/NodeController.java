@@ -11,7 +11,6 @@ import a.danylenko.microcontroller.automatization.project.services.impl.Response
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +39,7 @@ public class NodeController {
   }
 
   @GetMapping("/{nodeId}")
-  public ResponseEntity<?> getNodesUserById(@PathVariable("nodeId") final String nodeId,
+  public ResponseEntity<?> getNodeById(@PathVariable("nodeId") final String nodeId,
       final Principal principal) throws NoSuchItemException {
     LOG.debug("Get node by id={} and userId={}", nodeId, principal.getName());
     return ResponseService.success("Get node by id request success",
@@ -59,7 +58,7 @@ public class NodeController {
     return ResponseService.success("Node added success");
   }
 
-  @DeleteMapping("/")
+  @DeleteMapping("/{nodeId")
   public ResponseEntity<?> deleteNode(@RequestParam("nodeId") final String nodeId,
       final Principal principal) throws NoSuchItemException {
     LOG.debug("Delete node with id={}, userId={}", nodeId, principal.getName());
@@ -67,15 +66,16 @@ public class NodeController {
     return ResponseService.success("Node deleted success");
   }
 
-  @PostMapping("/")
-  public ResponseEntity<?> updateNode(@RequestBody final Node node, final Principal principal)
+  @PostMapping("/{nodeId}")
+  public ResponseEntity<?> updateNode(@PathVariable("nodeId") final String nodeId,
+      @RequestBody final Node node, final Principal principal)
       throws ItemAlreadyExistsException, NoSuchItemException {
     node.setUserId(principal.getName());
 
-    LOG.debug("Update node with url={}, name={}, userId={}", node.getUrl(), node.getName(),
-        node.getUserId());
+    LOG.debug("Update node with id={}, url={}, name={}, userId={}", nodeId, node.getUrl(),
+        node.getName(), node.getUserId());
     nodeService.update(node);
 
-    return ResponseService.success("Node added success");
+    return ResponseService.success("Node updated success");
   }
 }

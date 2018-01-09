@@ -82,7 +82,7 @@ public class NodeServiceImpl implements NodeService {
 
     final Node existsNode = getByIdAndUserId(item.getId(), item.getUserId());
     existsNode.setName(item.getName());
-//    existsNode.setUrl(item.getUrl());
+    existsNode.setUrl(item.getUrl());
 
     nodeRepository.save(existsNode);
   }
