@@ -47,6 +47,7 @@ class SmartTable extends Component {
           responsive={true}
           pagination
           selectRow={this.state.selectRowProp}
+          height="345px"
         >
           {this.props.children}
         </BootstrapTable>
@@ -66,22 +67,33 @@ class SmartTable extends Component {
               Edit
             </Button>
           )}
-          {this.props.deleteClick && (
-            <Button
-              bsStyle="danger"
-              onClick={() => this.setState({ showRemoveModal: true })}
-              disabled={!this.state.itemSelected}
-            >
-              Remove
-            </Button>
-          )}
+          {this.props.deleteClick &&
+            this.props.onSuccessRemove && (
+              <Button
+                bsStyle="danger"
+                onClick={() => this.setState({ showRemoveModal: true })}
+                disabled={!this.state.itemSelected}
+              >
+                Remove
+              </Button>
+            )}
         </ButtonToolbar>
-        <RemoveWindow
-          show={this.state.showRemoveModal}
-          close={() => this.setState({ showRemoveModal: false })}
-          title="Delete item"
-          delete={() => this.props.deleteClick(this.state.selectedRow)}
-        />
+        {this.props.deleteClick &&
+          this.props.onSuccessRemove && (
+            <RemoveWindow
+              show={this.state.showRemoveModal}
+              close={() => this.setState({ showRemoveModal: false })}
+              title="Delete item"
+              delete={() => this.props.deleteClick(this.state.selectedRow)}
+              failed={this.props.removeProcessFailed}
+              processRunning={this.props.removeProcessRunning}
+              processSuccess={this.props.removeProcessSuccess}
+              onSuccess={() => {
+                this.setState({ showRemoveModal: false });
+                this.props.onSuccessRemove();
+              }}
+            />
+          )}
       </Col>
     );
   }
@@ -108,7 +120,11 @@ SmartTable.propTypes = {
   selectedHandler: PropTypes.func.isRequired,
   addClick: PropTypes.func,
   editClick: PropTypes.func,
-  deleteClick: PropTypes.func
+  deleteClick: PropTypes.func,
+  removeProcessFailed: PropTypes.any,
+  removeProcessRunning: PropTypes.any,
+  removeProcessSuccess: PropTypes.any,
+  onSuccessRemove: PropTypes.func
 };
 
 export default SmartTable;

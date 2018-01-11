@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,8 +57,8 @@ public class NodeController {
     return ResponseService.success("Node added success");
   }
 
-  @DeleteMapping("/{nodeId")
-  public ResponseEntity<?> deleteNode(@RequestParam("nodeId") final String nodeId,
+  @DeleteMapping("/{nodeId}")
+  public ResponseEntity<?> deleteNode(@PathVariable("nodeId") final String nodeId,
       final Principal principal) throws NoSuchItemException {
     LOG.debug("Delete node with id={}, userId={}", nodeId, principal.getName());
     nodeService.deleteNodeByIdAndUserId(nodeId, principal.getName());

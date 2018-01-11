@@ -47,6 +47,13 @@ export class Nodes extends Component {
           editClick={() => this.setState({ editNodeShow: true })}
           addClick={() => this.setState({ addNodeShow: true })}
           deleteClick={node => this.props.deleteNode(node.id)}
+          removeProcessFailed={this.props.deleteFailed}
+          removeProcessRunning={this.props.deleting}
+          removeProcessSuccess={this.props.deleteSuccess}
+          onSuccessRemove={() => {
+            this.props.resetDeletingProcess();
+            this.props.loadNodes();
+          }}
         >
           <TableHeaderColumn
             dataField="id"
@@ -98,7 +105,19 @@ const mapStateToProps = state => {
       state,
       ProcessTypes.NODES_LOAD
     ),
-    nodes: DckSelectors.selectAllItems(state, ItemTypes.Node)
+    nodes: DckSelectors.selectAllItems(state, ItemTypes.Node),
+    deleting: DckSelectors.selectProcessRunning(
+      state,
+      ProcessTypes.NODES_REMOVE
+    ),
+    deleteFailed: DckSelectors.selectProcessFailed(
+      state,
+      ProcessTypes.NODES_REMOVE
+    ),
+    deleteSuccess: DckSelectors.selectProcessSuccess(
+      state,
+      ProcessTypes.NODES_REMOVE
+    )
   };
 
   return mapping;
@@ -109,7 +128,11 @@ const mapDispatchToProps = dispatch => {
     loadNodes: () => dispatch(DckActionCreators.itemsLoad(ItemTypes.Node)),
     makeNodeActive: id =>
       dispatch(DckActionCreators.itemMakeActive(ItemTypes.Node, id)),
-    deleteNode: id => dispatch(DckActionCreators.itemRemove(ItemTypes.Node, id))
+    deleteNode: id =>
+      dispatch(DckActionCreators.itemRemove(ItemTypes.Node, id)),
+    resetDeletingProcess: () => {
+      dispatch(DckActionCreators.asyncProcessReset(ProcessTypes.NODES_REMOVE));
+    }
   };
 };
 

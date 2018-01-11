@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Alert } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import ModalWindow from "../ModalWindow";
@@ -9,8 +9,18 @@ class RemoveWindow extends Component {
     show: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
-    delete: PropTypes.func.isRequired
+    delete: PropTypes.func.isRequired,
+    failed: PropTypes.any,
+    processRunning: PropTypes.any,
+    processSuccess: PropTypes.any,
+    onSuccess: PropTypes.func.isRequired
   };
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.processSuccess && newProps.show) {
+      this.props.onSuccess();
+    }
+  }
 
   render() {
     return (
@@ -27,10 +37,23 @@ class RemoveWindow extends Component {
         }}
         onOkClick={() => {
           this.props.delete();
-          this.props.close();
         }}
       >
         <p>Are you sure you want to remove selected item?</p>
+        {this.props.processRunning && (
+          <Alert bsStyle="warning" bsClass="external-page-alert alert">
+            <strong>Operation pending</strong>
+            <br /> Please wait...
+          </Alert>
+        )}
+
+        {this.props.failed && (
+          <Alert bsStyle="warning" bsClass="external-page-alert alert">
+            <strong>Operation failed!</strong>
+            <br />
+            Please check the data and try again
+          </Alert>
+        )}
       </ModalWindow>
     );
   }
