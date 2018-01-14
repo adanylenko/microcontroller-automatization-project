@@ -15,4 +15,6 @@ public interface NodeService extends CrudService<Node> {
   List<Node> getNodesByUserId(final String userId);
 
   void deleteNodeByIdAndUserId(final String nodeId, final String userId) throws NoSuchItemException;
+
+  Node getByUserIdAndName(final String userId, final String name) throws NoSuchItemException;
 }

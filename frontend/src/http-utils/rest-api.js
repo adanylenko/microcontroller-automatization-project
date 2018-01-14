@@ -39,6 +39,19 @@ export const RestApi = {
   },
   RemoveNode: (idToken, id) => {
     return ApiCall(RestUrls.NODES_URL(id), idToken, null, "DELETE");
+  },
+
+  ListDevices: idToken => {
+    return ApiCall(RestUrls.DEVICES_URL(), idToken, null, "GET");
+  },
+  AddDevice: (idToken, node) => {
+    return ApiCall(RestUrls.DEVICES_URL(), idToken, node, "PUT");
+  },
+  SaveDevice: (idToken, id, node) => {
+    return ApiCall(RestUrls.DEVICES_URL(id), idToken, node, "POST");
+  },
+  RemoveDevice: (idToken, id) => {
+    return ApiCall(RestUrls.DEVICES_URL(id), idToken, null, "DELETE");
   }
 };
 

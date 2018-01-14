@@ -1,6 +1,3 @@
-import * as React from "react";
-import { IValidationResult } from "dck-validators";
-
 export function initField(
   that,
   name,

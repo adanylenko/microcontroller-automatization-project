@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Row, Col, Alert, FormGroup } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 
 import { FieldGroup } from "dck-react-components";
 import { nonEmpty } from "dck-validators";

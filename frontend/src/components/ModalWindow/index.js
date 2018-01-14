@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Modal, Button, ButtonGroup, Row, Col } from "react-bootstrap";
+import { Modal, Button, Row } from "react-bootstrap";
 
 export class ModalWindow extends Component {
   static propTypes = {

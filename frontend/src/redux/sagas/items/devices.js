@@ -6,34 +6,34 @@ import * as ProcessTypes from "../../processes/types";
 import { getSessionData } from "../account";
 import RestApi from "../../../http-utils/rest-api";
 
-export function* loadNodesSaga() {
+export function* loadDevicesSaga() {
   yield put({
     type: DckActionTypes.ASYNC_PROCESS_START,
-    processCode: ProcessTypes.NODES_LOAD
+    processCode: ProcessTypes.DEVICES_LOAD
   });
 
   try {
     const sessionData = yield call(getSessionData);
-    const response = yield call(RestApi.ListNodes, sessionData.access_token);
+    const response = yield call(RestApi.ListDevices, sessionData.access_token);
 
     yield put({
       type: DckActionTypes.ITEMS_SET,
-      itemType: ItemTypes.Node,
+      itemType: ItemTypes.Device,
       data: response.data && response.data.length ? response.data : []
     });
     yield put({
       type: DckActionTypes.ASYNC_PROCESS_STOP,
-      processCode: ProcessTypes.NODES_LOAD,
+      processCode: ProcessTypes.DEVICES_LOAD,
       result: {
         success: true
       }
     });
   } catch (error) {
-    console.log("Error get nodes=", error);
+    console.log("Error get devices=", error);
 
     yield put({
       type: DckActionTypes.ASYNC_PROCESS_STOP,
-      processCode: ProcessTypes.NODES_LOAD,
+      processCode: ProcessTypes.DEVICES_LOAD,
       result: {
         success: false
       }
@@ -41,27 +41,27 @@ export function* loadNodesSaga() {
   }
 }
 
-function* addNodeSaga(action) {
+function* addDeviceSaga(action) {
   yield put({
     type: DckActionTypes.ASYNC_PROCESS_START,
-    processCode: ProcessTypes.NODES_ADD
+    processCode: ProcessTypes.DEVICES_ADD
   });
 
   try {
     const sessionData = yield call(getSessionData);
-    yield call(RestApi.AddNode, sessionData.access_token, action.data);
+    yield call(RestApi.AddDevice, sessionData.access_token, action.data);
     yield put({
       type: DckActionTypes.ASYNC_PROCESS_STOP,
-      processCode: ProcessTypes.NODES_ADD,
+      processCode: ProcessTypes.DEVICES_ADD,
       result: {
         success: true
       }
     });
   } catch (error) {
-    console.log("Error when try to add node=", error);
+    console.log("Error when try to add device=", error);
     yield put({
       type: DckActionTypes.ASYNC_PROCESS_STOP,
-      processCode: ProcessTypes.NODES_ADD,
+      processCode: ProcessTypes.DEVICES_ADD,
       result: {
         success: false
       }
@@ -69,32 +69,32 @@ function* addNodeSaga(action) {
   }
 }
 
-function* saveNodeSaga(action) {
+function* saveDeviceSaga(action) {
   yield put({
     type: DckActionTypes.ASYNC_PROCESS_START,
-    processCode: ProcessTypes.NODES_SAVE
+    processCode: ProcessTypes.DEVICES_SAVE
   });
 
   try {
     const sessionData = yield call(getSessionData);
     yield call(
-      RestApi.SaveNode,
+      RestApi.SaveDevice,
       sessionData.access_token,
       action.id,
       action.data
     );
     yield put({
       type: DckActionTypes.ASYNC_PROCESS_STOP,
-      processCode: ProcessTypes.NODES_SAVE,
+      processCode: ProcessTypes.DEVICES_SAVE,
       result: {
         success: true
       }
     });
   } catch (error) {
-    console.log("Error when try to update node=", error);
+    console.log("Error when try to update device=", error);
     yield put({
       type: DckActionTypes.ASYNC_PROCESS_STOP,
-      processCode: ProcessTypes.NODES_SAVE,
+      processCode: ProcessTypes.DEVICES_SAVE,
       result: {
         success: false
       }
@@ -102,27 +102,27 @@ function* saveNodeSaga(action) {
   }
 }
 
-function* removeNodeSaga(action) {
+function* removeDeviceSaga(action) {
   yield put({
     type: DckActionTypes.ASYNC_PROCESS_START,
-    processCode: ProcessTypes.NODES_REMOVE
+    processCode: ProcessTypes.DEVICES_REMOVE
   });
 
   try {
     const sessionData = yield call(getSessionData);
-    yield call(RestApi.RemoveNode, sessionData.access_token, action.id);
+    yield call(RestApi.RemoveDevice, sessionData.access_token, action.id);
     yield put({
       type: DckActionTypes.ASYNC_PROCESS_STOP,
-      processCode: ProcessTypes.NODES_REMOVE,
+      processCode: ProcessTypes.DEVICES_REMOVE,
       result: {
         success: true
       }
     });
   } catch (error) {
-    console.log("Error when try to remove node=", error);
+    console.log("Error when try to remove device=", error);
     yield put({
       type: DckActionTypes.ASYNC_PROCESS_STOP,
-      processCode: ProcessTypes.NODES_REMOVE,
+      processCode: ProcessTypes.DEVICES_REMOVE,
       result: {
         success: false
       }
@@ -130,33 +130,33 @@ function* removeNodeSaga(action) {
   }
 }
 
-function* nodesSaga() {
+function* devicesSaga() {
   yield all([
     takeEvery(
       action =>
         action.type === DckActionTypes.ITEMS_LOAD &&
-        action.itemType === ItemTypes.Node,
-      loadNodesSaga
+        action.itemType === ItemTypes.Device,
+      loadDevicesSaga
     ),
     takeEvery(
       action =>
         action.type === DckActionTypes.ITEM_ADD &&
-        action.itemType === ItemTypes.Node,
-      addNodeSaga
+        action.itemType === ItemTypes.Device,
+      addDeviceSaga
     ),
     takeEvery(
       action =>
         action.type === DckActionTypes.ITEM_SAVE &&
-        action.itemType === ItemTypes.Node,
-      saveNodeSaga
+        action.itemType === ItemTypes.Device,
+      saveDeviceSaga
     ),
     takeEvery(
       action =>
         action.type === DckActionTypes.ITEM_REMOVE &&
-        action.itemType === ItemTypes.Node,
-      removeNodeSaga
+        action.itemType === ItemTypes.Device,
+      removeDeviceSaga
     )
   ]);
 }
 
-export default nodesSaga;
+export default devicesSaga;

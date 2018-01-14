@@ -31,6 +31,13 @@ public class DeviceServiceImpl implements DeviceService {
   }
 
   @Override
+  public List<Device> getByUserId(final String userId) {
+    Preconditions.checkNotNull(userId, "Name can't be null");
+    LOG.debug("Get devices by user id={}", userId);
+    return deviceRepository.findAllByUserId(userId);
+  }
+
+  @Override
   public Device getById(final String id) throws NoSuchItemException {
     Preconditions.checkNotNull(id, "Device id can't be null");
 

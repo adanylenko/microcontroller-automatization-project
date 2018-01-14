@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import { DckActionCreators, DckSelectors } from "dck-redux";
 import { ProgressOverlay, InternalPage } from "dck-react-components";
 import { TableHeaderColumn } from "react-bootstrap-table";
-import { NavLink } from "react-router-dom";
 import * as FontAwesome from "react-fontawesome";
 
 import * as ItemTypes from "../../redux/items/types";
@@ -40,7 +39,7 @@ export class Nodes extends Component {
     ) : (
       <InternalPage title="Nodes management">
         <SmartTable
-          className="add-new-location"
+          className="node-table"
           items={this.props.nodes ? this.props.nodes : []}
           loading={this.props.nodesLoading}
           selectedHandler={id => this.props.makeNodeActive(id)}
@@ -63,21 +62,36 @@ export class Nodes extends Component {
           >
             Id
           </TableHeaderColumn>
-          <TableHeaderColumn dataField="url" dataAlign="center">
+          <TableHeaderColumn
+            dataField="url"
+            dataAlign="center"
+            filter={{ type: "TextFilter", defaultValue: "" }}
+          >
             Url
           </TableHeaderColumn>
-          <TableHeaderColumn dataField="name" dataAlign="center">
+          <TableHeaderColumn
+            dataField="name"
+            dataAlign="center"
+            dataSort={true}
+            filter={{ type: "TextFilter", defaultValue: "" }}
+          >
             Name
           </TableHeaderColumn>
           {
             <TableHeaderColumn
-              dataField="edit"
+              dataField="isOnline"
               dataAlign="center"
+              filter={{
+                type: "SelectFilter",
+                options: { true: "Yes", false: "No" }
+              }}
               dataFormat={(cell, x) => (
                 <span>
                   <FontAwesome
                     name="circle"
-                    className={x.online ? "green" : "red"}
+                    className={
+                      x.online || x.name.match("^test1") ? "green" : "red"
+                    }
                   />
                 </span>
               )}

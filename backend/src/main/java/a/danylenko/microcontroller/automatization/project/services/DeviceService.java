@@ -6,4 +6,6 @@ import a.danylenko.microcontroller.automatization.project.data.entities.Device;
 
 public interface DeviceService extends CrudService<Device> {
   List<Device> getDevicesByNodeId(final String nodeId);
+
+  List<Device> getByUserId(final String userId);
 }

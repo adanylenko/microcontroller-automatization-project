@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Alert } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 import ModalWindow from "../ModalWindow";
@@ -30,7 +30,6 @@ class RemoveWindow extends Component {
         okButtonStyle="danger"
         show={this.props.show}
         cancelButtonStyle="remove-window-form-cancel-button"
-        okButtonStyle="remove-window-form-ok-button"
         bodyClass="remove-window-form-body-class"
         close={() => {
           this.props.close();

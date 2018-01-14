@@ -1,15 +1,6 @@
-import {
-  takeEvery,
-  all,
-  put,
-  call,
-  select,
-  cps,
-  take
-} from "redux-saga/effects";
-import { DckActionTypes, DckSelectors } from "dck-redux";
+import { takeEvery, all, put, call, select, cps } from "redux-saga/effects";
+import { DckActionTypes } from "dck-redux";
 import { push, replace } from "react-router-redux";
-import * as ActionTypes from "../actions/types";
 import Auth from "../auth";
 
 const auth = new Auth();

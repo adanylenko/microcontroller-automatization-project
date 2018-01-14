@@ -24,6 +24,8 @@ public class NodeServiceImpl implements NodeService {
 
   @Override
   public Node getById(final String id) throws NoSuchItemException {
+    Preconditions.checkNotNull(id, "Id can't be null");
+
     LOG.debug("Get node with id={}", id);
 
     final Node node = nodeRepository.findOne(id);
@@ -49,22 +51,36 @@ public class NodeServiceImpl implements NodeService {
     Preconditions.checkNotNull(item.getUrl(), "Node url can't be null");
     Preconditions.checkNotNull(item.getUserId(), "Node url can't be null");
 
-    try {
-//      userService.getUserById(item.getUserId());
-      getByUrlAndUserId(item.getUrl(), item.getUserId());
+    if (nodeRepository.findByUrlAndUserId(item.getUrl(), item.getUserId()) != null
+        || nodeRepository.findByUserIdAndName(item.getUserId(), item.getName()) != null) {
       LOG.debug("Error when try to add node with url={} and userId={}.\n Node already exists.",
           item.getUrl(), item.getUserId());
       throw new ItemAlreadyExistsException(String
           .format("Node with url=%s and userId=%s already exists.", item.getUrl(),
               item.getUserId()));
-    } catch (final NoSuchItemException ex) {
-      LOG.debug("Node with url={} and userId={} not found add a new one.", item.getUrl(),
-          item.getUserId());
-
-      final Node node = new Node(item.getUrl(), item.getName(), item.getUserId());
-
-      nodeRepository.save(node);
     }
+
+    LOG.debug("Node with url={}, name={} and userId={} not found add a new one.", item.getUrl(),
+        item.getName(), item.getUserId());
+
+    final Node node = new Node(item.getUrl(), item.getName(), item.getUserId());
+
+    nodeRepository.save(node);
+  }
+
+  public Node getByUserIdAndName(final String userId, final String name)
+      throws NoSuchItemException {
+    Preconditions.checkNotNull(userId, "User id can't be null");
+    Preconditions.checkNotNull(name, "Name id can't be null");
+
+    final Node node = nodeRepository.findByUserIdAndName(userId, name);
+
+    if (node == null) {
+      throw new NoSuchItemException(
+          String.format("Node with user id=%s and name=%s not found", userId, name));
+    }
+
+    return node;
   }
 
   @Override

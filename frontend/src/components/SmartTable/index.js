@@ -47,7 +47,7 @@ class SmartTable extends Component {
           responsive={true}
           pagination
           selectRow={this.state.selectRowProp}
-          height="345px"
+          // height="345px"
         >
           {this.props.children}
         </BootstrapTable>

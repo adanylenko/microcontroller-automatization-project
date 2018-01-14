@@ -3,11 +3,13 @@ import { connect } from "react-redux";
 import { DckSelectors, DckActionCreators } from "dck-redux";
 import PropTypes from "prop-types";
 import { ProgressOverlay, Sidebar } from "dck-react-components";
-import { Grid, Row, Col, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import SidebarItem from "../SidebarItem";
+import { Row, Col } from "react-bootstrap";
+import { Route, Switch } from "react-router-dom";
 
+import SidebarItem from "../SidebarItem";
 import "./styles.css";
+import Devices from "../Devices";
+import Nodes from "../Nodes";
 
 class App extends Component {
   static propTypes = {
@@ -78,7 +80,10 @@ class App extends Component {
           lgOffset={2}
           className="main-content"
         >
-          {this.props.children}
+          <Switch>
+            <Route path="/nodes" component={Nodes} />
+            <Route path="/devices" component={Devices} />
+          </Switch>
         </Col>
       </Row>
     );

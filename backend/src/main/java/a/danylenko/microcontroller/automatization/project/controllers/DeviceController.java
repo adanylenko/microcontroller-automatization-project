@@ -1,5 +1,7 @@
 package a.danylenko.microcontroller.automatization.project.controllers;
 
+import java.security.Principal;
+
 import a.danylenko.microcontroller.automatization.project.data.entities.Device;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
@@ -28,7 +30,14 @@ public class DeviceController {
     this.deviceService = deviceService;
   }
 
-  @GetMapping("/list/{nodeId}")
+  @GetMapping("/")
+  public ResponseEntity<?> getUserDevices(final Principal principal) {
+    LOG.debug("Get all devices for user with id={}", principal.getName());
+    return ResponseService.success("Get all devices for user request success",
+        deviceService.getByUserId(principal.getName()));
+  }
+
+  @GetMapping("/node/{nodeId}")
   public ResponseEntity<?> getNodeDevices(@PathVariable("nodeId") final String nodeId) {
     LOG.debug("Get all devices for node with id={}", nodeId);
     return ResponseService.success("Get all devices for node request success",
