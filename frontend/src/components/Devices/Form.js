@@ -108,6 +108,18 @@ class DeviceForm extends Component {
     }
   }
 
+  getValidationState(validation) {
+    if (!validation) {
+      return null;
+    }
+
+    if (validation.valid) {
+      return "success";
+    } else {
+      return "error";
+    }
+  }
+
   render() {
     return (
       <ModalDialog
@@ -139,7 +151,7 @@ class DeviceForm extends Component {
               this.props.device.type ? this.props.device.type : ""
             );
             this.state.node_id.setValue(
-              this.props.device.node_id ? this.props.device.node_id : ""
+              this.props.device.nodeId ? this.props.device.nodeId : ""
             );
           }
         }}
@@ -166,13 +178,9 @@ class DeviceForm extends Component {
 
           <FormGroup
             controlId="node-select"
-            validationState={
-              this.state.node_id &&
-              this.state.node_id.validation &&
-              this.state.node_id.validation.valid
-                ? "success"
-                : "error"
-            }
+            validationState={this.getValidationState(
+              this.state.node_id.validation
+            )}
           >
             <ControlLabel>Device node</ControlLabel>
             <Select
@@ -192,32 +200,66 @@ class DeviceForm extends Component {
               onChange={event =>
                 event ? this.state.node_id.setValue(event.value) : ""
               }
-              // arrowRenderer={this.arrowRender}
-            />{" "}
-            {this.props.help && <HelpBlock>{this.props.help}</HelpBlock>}
-            {this.props.validationMessage &&
-            this.props.validationState &&
-            !this.props.validationState.valid ? (
+            />
+            {this.state.node_id.validation &&
+            !this.state.node_id.validation.valid ? (
               <HelpBlock>
-                <FontAwesome name="exclamation-circle" />&nbsp;
-                {this.props.validationMessage}
+                <FontAwesome name="exclamation-circle" />&nbsp; Select device
+                node
               </HelpBlock>
             ) : (
               <HelpBlock>&nbsp;</HelpBlock>
             )}
           </FormGroup>
 
-          {/* <FieldGroup
-            id="node_name"
+          <FormGroup
+            controlId="device-type-select"
+            validationState={this.getValidationState(
+              this.state.type.validation
+            )}
+          >
+            <ControlLabel>Device type</ControlLabel>
+            <Select
+              className="react-select"
+              placeholder="Select device type"
+              value={this.state.type.value}
+              clearable={false}
+              searchable={false}
+              options={[
+                {
+                  label: "INPUT",
+                  value: "INPUT"
+                },
+                {
+                  label: "OUTPUT",
+                  value: "OUTPUT"
+                }
+              ]}
+              onChange={event =>
+                event ? this.state.type.setValue(event.value) : ""
+              }
+            />
+            {this.state.type.validation && !this.state.type.validation.valid ? (
+              <HelpBlock>
+                <FontAwesome name="exclamation-circle" />&nbsp; Select device
+                type
+              </HelpBlock>
+            ) : (
+              <HelpBlock>&nbsp;</HelpBlock>
+            )}
+          </FormGroup>
+
+          <FieldGroup
+            id="pins"
             type="text"
-            label="Node name"
-            placeholder="Enter device name"
-            value={this.state.node_name.value}
-            onChange={this.state.node_name.onChange}
-            validationState={this.state.node_name.validation}
-            validationMessage="Node name must not be empty"
+            label="Device pins"
+            placeholder="Enter device pins"
+            value={this.state.pins.value}
+            onChange={this.state.pins.onChange}
+            validationState={this.state.pins.validation}
+            validationMessage="Device pins must not be empty"
             bsClass="item-form-control form-control"
-          /> */}
+          />
         </form>
 
         {this.props.processRunning && (

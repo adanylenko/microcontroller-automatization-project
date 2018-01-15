@@ -52,9 +52,10 @@ public class DeviceController {
   }
 
   @PutMapping("/")
-  public ResponseEntity<?> addDevice(@RequestBody final Device device)
+  public ResponseEntity<?> addDevice(@RequestBody final Device device, final Principal principal)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
     LOG.debug("Add device with name={} and user id={}", device.getName(), device.getUserId());
+    device.setUserId(principal.getName());
     deviceService.add(device);
     return ResponseService.success("Add device success");
   }
@@ -67,10 +68,12 @@ public class DeviceController {
     return ResponseService.success("Device deleted success");
   }
 
-  @PostMapping("/")
-  public ResponseEntity<?> updateDevice(@RequestBody final Device device)
+  @PostMapping("/{deviceId}")
+  public ResponseEntity<?> updateDevice(@PathVariable("deviceId") final String nodeId,
+      @RequestBody final Device device)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
-    LOG.debug("Update device with name={} and user id={}", device.getName(), device.getUserId());
+    LOG.debug("Update device with id={} name={} and user id={}", nodeId, device.getName(),
+        device.getUserId());
     deviceService.update(device);
     return ResponseService.success("Device updated success");
   }

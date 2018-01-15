@@ -64,7 +64,7 @@ export class Devices extends Component {
           removeProcessSuccess={this.props.deleteSuccess}
           onSuccessRemove={() => {
             this.props.resetDeletingProcess();
-            this.props.loadNodes();
+            this.props.loadDevices();
           }}
         >
           <TableHeaderColumn
