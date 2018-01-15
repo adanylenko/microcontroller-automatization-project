@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StateRepository extends JpaRepository<State, String> {
   List<State> findAllByCommandId(final String commandId);
+
+  List<State> findAllByUserId(final String userId);
 }

@@ -34,7 +34,7 @@ public class DeviceController {
   public ResponseEntity<?> getUserDevices(final Principal principal) {
     LOG.debug("Get all devices for user with id={}", principal.getName());
     return ResponseService.success("Get all devices for user request success",
-        deviceService.getByUserId(principal.getName()));
+        deviceService.getAllByUserId(principal.getName()));
   }
 
   @GetMapping("/node/{nodeId}")
@@ -45,36 +45,36 @@ public class DeviceController {
   }
 
   @GetMapping("/{deviceId}")
-  public ResponseEntity<?> getDeviceById(@PathVariable("deviceId") final String deviceId)
-      throws NoSuchItemException {
+  public ResponseEntity<?> getDeviceById(@PathVariable("deviceId") final String deviceId,
+      final Principal principal) throws NoSuchItemException {
     LOG.debug("Get device by id={} request", deviceId);
-    return ResponseService.success("Get device success", deviceService.getById(deviceId));
+    return ResponseService.success("Get device success",
+        deviceService.getByIdAndUserId(deviceId, principal.getName()));
   }
 
   @PutMapping("/")
   public ResponseEntity<?> addDevice(@RequestBody final Device device, final Principal principal)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
     LOG.debug("Add device with name={} and user id={}", device.getName(), device.getUserId());
-    device.setUserId(principal.getName());
-    deviceService.add(device);
+    deviceService.add(device, principal.getName());
     return ResponseService.success("Add device success");
   }
 
   @DeleteMapping("/{deviceId}")
-  public ResponseEntity<?> deleteDeviceById(@PathVariable("deviceId") final String deviceId)
-      throws NoSuchItemException {
+  public ResponseEntity<?> deleteDeviceById(@PathVariable("deviceId") final String deviceId,
+      final Principal principal) throws NoSuchItemException {
     LOG.debug("Delete device with id={} request", deviceId);
-    deviceService.delete(deviceId);
+    deviceService.delete(deviceId, principal.getName());
     return ResponseService.success("Device deleted success");
   }
 
   @PostMapping("/{deviceId}")
   public ResponseEntity<?> updateDevice(@PathVariable("deviceId") final String nodeId,
-      @RequestBody final Device device)
+      @RequestBody final Device device, final Principal principal)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
     LOG.debug("Update device with id={} name={} and user id={}", nodeId, device.getName(),
         device.getUserId());
-    deviceService.update(device);
+    deviceService.update(device, principal.getName());
     return ResponseService.success("Device updated success");
   }
 }

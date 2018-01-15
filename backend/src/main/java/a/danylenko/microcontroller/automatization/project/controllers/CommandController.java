@@ -1,5 +1,7 @@
 package a.danylenko.microcontroller.automatization.project.controllers;
 
+import java.security.Principal;
+
 import a.danylenko.microcontroller.automatization.project.data.entities.Command;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
@@ -36,33 +38,35 @@ public class CommandController {
   }
 
   @GetMapping("/{commandId}")
-  public ResponseEntity<?> getCommandById(@PathVariable("commandId") final String commandId)
-      throws NoSuchItemException {
+  public ResponseEntity<?> getCommandById(@PathVariable("commandId") final String commandId,
+      final Principal principal) throws NoSuchItemException {
     LOG.debug("Get command by id={} request", commandId);
-    return ResponseService.success("Get command success", commandService.getById(commandId));
+    return ResponseService.success("Get command success",
+        commandService.getByIdAndUserId(commandId, principal.getName()));
   }
 
   @PutMapping("/")
-  public ResponseEntity<?> addCommand(@RequestBody final Command command)
+  public ResponseEntity<?> addCommand(@RequestBody final Command command, final Principal principal)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
     LOG.debug("Add command with name={} and user id={}", command.getName(), command.getUserId());
-    commandService.add(command);
+    commandService.add(command, principal.getName());
     return ResponseService.success("Add command success");
   }
 
   @DeleteMapping("/{commandId}")
-  public ResponseEntity<?> deleteCommandById(@PathVariable("commandId") final String commandId)
-      throws NoSuchItemException {
+  public ResponseEntity<?> deleteCommandById(@PathVariable("commandId") final String commandId,
+      final Principal principal) throws NoSuchItemException {
     LOG.debug("Delete command with id={} request", commandId);
-    commandService.delete(commandId);
+    commandService.delete(commandId, principal.getName());
     return ResponseService.success("Command deleted success");
   }
 
   @PostMapping("/")
-  public ResponseEntity<?> updateCommand(@RequestBody final Command command)
+  public ResponseEntity<?> updateCommand(@RequestBody final Command command,
+      final Principal principal)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
     LOG.debug("Update command with name={} and user id={}", command.getName(), command.getUserId());
-    commandService.update(command);
+    commandService.update(command, principal.getName());
     return ResponseService.success("Command updated success");
   }
 }

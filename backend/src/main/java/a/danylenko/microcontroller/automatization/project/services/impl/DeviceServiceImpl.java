@@ -31,20 +31,14 @@ public class DeviceServiceImpl implements DeviceService {
   }
 
   @Override
-  public List<Device> getByUserId(final String userId) {
-    Preconditions.checkNotNull(userId, "Name can't be null");
-    LOG.debug("Get devices by user id={}", userId);
-    return deviceRepository.findAllByUserId(userId);
-  }
-
-  @Override
-  public Device getById(final String id) throws NoSuchItemException {
+  public Device getByIdAndUserId(final String id, final String userId) throws NoSuchItemException {
     Preconditions.checkNotNull(id, "Device id can't be null");
+    Preconditions.checkNotNull(userId, "User id can't be null");
 
-    LOG.debug("Get device with id={}", id);
+    LOG.debug("Get device with id={} and user id={}", id, userId);
     final Device device = deviceRepository.findOne(id);
 
-    if (device == null) {
+    if (device == null || device.getUserId() == null || device.getUserId().compareTo(userId) != 0) {
       LOG.debug("Device with id={} not found", id);
       throw new NoSuchItemException(String.format("Device with id=%s not found", id));
     }
@@ -53,22 +47,25 @@ public class DeviceServiceImpl implements DeviceService {
   }
 
   @Override
-  public List<Device> getAll() {
-    LOG.debug("Get all devices request");
-    return deviceRepository.findAll();
+  public List<Device> getAllByUserId(final String userId) {
+    Preconditions.checkNotNull(userId, "Name can't be null");
+    LOG.debug("Get devices by user id={}", userId);
+    return deviceRepository.findAllByUserId(userId);
   }
 
   @Override
-  public void add(final Device item) throws ItemAlreadyExistsException, NoSuchItemException {
+  public void add(final Device item, final String userId)
+      throws ItemAlreadyExistsException, NoSuchItemException {
+    Preconditions.checkNotNull(userId, "User id be null");
     Preconditions.checkNotNull(item, "Device can't be null");
     Preconditions.checkNotNull(item.getName(), "Device name can't be null");
     Preconditions.checkNotNull(item.getNodeId(), "Node id can't be null");
     Preconditions.checkNotNull(item.getPins(), "Device pins can't be null");
     Preconditions.checkNotNull(item.getType(), "Device type can't be null");
-    Preconditions.checkNotNull(item.getUserId(), "User id can't be null");
 
+    item.setUserId(userId);
     LOG.debug("Add device with name={} and node id={}", item.getName(), item.getNodeId());
-    nodeService.getById(item.getNodeId());
+    nodeService.getByIdAndUserId(item.getNodeId(), userId);
 
     final Device device =
         new Device(item.getName(), item.getType(), item.getPins(), item.getNodeId(),
@@ -78,16 +75,18 @@ public class DeviceServiceImpl implements DeviceService {
   }
 
   @Override
-  public void delete(final String id) throws NoSuchItemException {
+  public void delete(final String id, final String userId) throws NoSuchItemException {
     Preconditions.checkNotNull(id, "Device id cant be null");
+    Preconditions.checkNotNull(userId, "User id cant be null");
 
-    LOG.debug("Delete node with id={}", id);
+    LOG.debug("Delete node with id={} and user id={}", id, userId);
 
-    deviceRepository.delete(getById(id));
+    deviceRepository.delete(getByIdAndUserId(id, userId));
   }
 
   @Override
-  public void update(final Device item) throws NoSuchItemException {
+  public void update(final Device item, final String userId) throws NoSuchItemException {
+    Preconditions.checkNotNull(userId, "User id can't be null");
     Preconditions.checkNotNull(item, "Device can't be null");
     Preconditions.checkNotNull(item.getId(), "Device id can't be null");
     Preconditions.checkNotNull(item.getName(), "Device name can't be null");
@@ -95,10 +94,12 @@ public class DeviceServiceImpl implements DeviceService {
     Preconditions.checkNotNull(item.getPins(), "Device pins can't be null");
     Preconditions.checkNotNull(item.getType(), "Device type can't be null");
 
-    LOG.debug("Update device with id={}", item.getId());
-    nodeService.getById(item.getNodeId());
+    item.setUserId(userId);
 
-    final Device existsDevice = getById(item.getId());
+    LOG.debug("Update device with id={}", item.getId());
+    nodeService.getByIdAndUserId(item.getNodeId(), userId);
+
+    final Device existsDevice = getByIdAndUserId(item.getId(), userId);
     existsDevice.setName(item.getName());
     existsDevice.setPins(item.getPins());
     existsDevice.setType(item.getType());

@@ -58,7 +58,7 @@ class DeviceForm extends Component {
         this,
         "pins",
         this.props.device.pins ? this.props.device.pins : "",
-        nonEmpty,
+        this.separatedNumber,
         isNew
       ),
       ...initField(
@@ -76,6 +76,23 @@ class DeviceForm extends Component {
         isNew
       )
     };
+  }
+
+  separatedNumber(value) {
+    return new Promise((resolve, reject) => {
+      let empty = false;
+
+      let valid = false;
+
+      if (!value || value.trim().length === 0) {
+        empty = true;
+      } else {
+        if (value.match(new RegExp("^[0-9]+(,[0-9]+)*$", "g"))) {
+          valid = true;
+        }
+      }
+      resolve({ valid, empty });
+    });
   }
 
   valid() {

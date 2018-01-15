@@ -1,5 +1,7 @@
 package a.danylenko.microcontroller.automatization.project.controllers;
 
+import java.security.Principal;
+
 import a.danylenko.microcontroller.automatization.project.data.entities.State;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
@@ -36,33 +38,34 @@ public class StateController {
   }
 
   @GetMapping("/{stateId}")
-  public ResponseEntity<?> getStateById(@PathVariable("stateId") final String stateId)
-      throws NoSuchItemException {
+  public ResponseEntity<?> getStateById(@PathVariable("stateId") final String stateId,
+      final Principal principal) throws NoSuchItemException {
     LOG.debug("Get state by id={} request", stateId);
-    return ResponseService.success("Get state success", stateService.getById(stateId));
+    return ResponseService
+        .success("Get state success", stateService.getByIdAndUserId(stateId, principal.getName()));
   }
 
   @PutMapping("/")
-  public ResponseEntity<?> addState(@RequestBody final State state)
+  public ResponseEntity<?> addState(@RequestBody final State state, final Principal principal)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
     LOG.debug("Add state with name={} and user id={}", state.getName(), state.getUserId());
-    stateService.add(state);
+    stateService.add(state, principal.getName());
     return ResponseService.success("Add state success");
   }
 
   @DeleteMapping("/{stateId}")
-  public ResponseEntity<?> deleteStateById(@PathVariable("stateId") final String stateId)
-      throws NoSuchItemException {
+  public ResponseEntity<?> deleteStateById(@PathVariable("stateId") final String stateId,
+      final Principal principal) throws NoSuchItemException {
     LOG.debug("Delete state with id={} request", stateId);
-    stateService.delete(stateId);
+    stateService.delete(stateId, principal.getName());
     return ResponseService.success("State deleted success");
   }
 
   @PostMapping("/")
-  public ResponseEntity<?> updateState(@RequestBody final State state)
+  public ResponseEntity<?> updateState(@RequestBody final State state, final Principal principal)
       throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
     LOG.debug("Update state with name={} and user id={}", state.getName(), state.getUserId());
-    stateService.update(state);
+    stateService.update(state, principal.getName());
     return ResponseService.success("State updated success");
   }
 }

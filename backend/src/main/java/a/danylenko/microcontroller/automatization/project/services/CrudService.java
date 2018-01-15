@@ -7,14 +7,14 @@ import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemE
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 
 public interface CrudService<T> {
-  T getById(final String id) throws NoSuchItemException;
+  T getByIdAndUserId(final String id, final String userId) throws NoSuchItemException;
 
-  List<T> getAll();
+  List<T> getAllByUserId(final String userId);
 
-  void add(final T item) throws ItemAlreadyExistsException, NoSuchUserException,
-      NoSuchItemException;
+  void add(final T item, final String userId)
+      throws ItemAlreadyExistsException, NoSuchUserException, NoSuchItemException;
 
-  void delete(final String id) throws NoSuchItemException;
+  void delete(final String id, final String userId) throws NoSuchItemException;
 
-  void update(final T item) throws NoSuchItemException;
+  void update(final T item, final String userId) throws NoSuchItemException;
 }

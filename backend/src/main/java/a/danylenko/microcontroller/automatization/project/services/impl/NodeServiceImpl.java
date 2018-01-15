@@ -23,14 +23,14 @@ public class NodeServiceImpl implements NodeService {
   }
 
   @Override
-  public Node getById(final String id) throws NoSuchItemException {
-    Preconditions.checkNotNull(id, "Id can't be null");
-
-    LOG.debug("Get node with id={}", id);
+  public Node getByIdAndUserId(final String id, final String userId) throws NoSuchItemException {
+    Preconditions.checkNotNull(id, "Node id can't be null");
+    Preconditions.checkNotNull(userId, "User id can't be null");
+    LOG.debug("Get node with id={} and user id={}", id, userId);
 
     final Node node = nodeRepository.findOne(id);
 
-    if (node == null) {
+    if (node == null || node.getUserId() == null || node.getUserId().compareTo(userId) != 0) {
       LOG.debug("Node with id={} not found");
       throw new NoSuchItemException(String.format("Node with id=%s not found", id));
     }
@@ -39,17 +39,22 @@ public class NodeServiceImpl implements NodeService {
   }
 
   @Override
-  public List<Node> getAll() {
+  public List<Node> getAllByUserId(final String userId) {
+    Preconditions.checkNotNull(userId, "User id can't be null");
+
     LOG.debug("Get all nodes request");
-    return nodeRepository.findAll();
+    return nodeRepository.findAllByUserId(userId);
   }
 
   @Override
-  public void add(final Node item) throws ItemAlreadyExistsException, NoSuchUserException {
+  public void add(final Node item, final String userId)
+      throws ItemAlreadyExistsException, NoSuchUserException {
+    Preconditions.checkNotNull(userId, "User id can't be null");
     Preconditions.checkNotNull(item, "Node can't be null");
     Preconditions.checkNotNull(item.getName(), "Node name can't be null");
     Preconditions.checkNotNull(item.getUrl(), "Node url can't be null");
-    Preconditions.checkNotNull(item.getUserId(), "Node url can't be null");
+
+    item.setUserId(userId);
 
     if (nodeRepository.findByUrlAndUserId(item.getUrl(), item.getUserId()) != null
         || nodeRepository.findByUserIdAndName(item.getUserId(), item.getName()) != null) {
@@ -84,17 +89,20 @@ public class NodeServiceImpl implements NodeService {
   }
 
   @Override
-  public void delete(final String id) throws NoSuchItemException {
+  public void delete(final String id, final String userId) throws NoSuchItemException {
     Preconditions.checkNotNull(id, "Id can't be null");
-    nodeRepository.delete(getById(id));
+    Preconditions.checkNotNull(userId, "User id can't be null");
+    nodeRepository.delete(getByIdAndUserId(id, userId));
   }
 
   @Override
-  public void update(final Node item) throws NoSuchItemException {
+  public void update(final Node item, final String userId) throws NoSuchItemException {
+    Preconditions.checkNotNull(userId, "User id can't be null");
     Preconditions.checkNotNull(item, "Node can't be null");
     Preconditions.checkNotNull(item.getName(), "Node name can't be null");
     Preconditions.checkNotNull(item.getUrl(), "Node url can't be null");
-    Preconditions.checkNotNull(item.getUserId(), "Node url can't be null");
+
+    item.setUserId(userId);
 
     final Node existsNode = getByIdAndUserId(item.getId(), item.getUserId());
     existsNode.setName(item.getName());
@@ -127,12 +135,6 @@ public class NodeServiceImpl implements NodeService {
   }
 
   @Override
-  public List<Node> getNodesByUserId(final String userId) {
-    Preconditions.checkNotNull(userId, "User id can't be null");
-    return nodeRepository.findAllByUserId(userId);
-  }
-
-  @Override
   public void deleteNodeByIdAndUserId(final String nodeId, final String userId)
       throws NoSuchItemException {
     Preconditions.checkNotNull(nodeId, "NodeId can't be null");
@@ -141,20 +143,5 @@ public class NodeServiceImpl implements NodeService {
     final Node node = getByIdAndUserId(nodeId, userId);
 
     nodeRepository.delete(node);
-  }
-
-  @Override
-  public Node getByIdAndUserId(final String nodeId, final String userId)
-      throws NoSuchItemException {
-    Preconditions.checkNotNull(nodeId, "Node id can't be null");
-    Preconditions.checkNotNull(userId, "User id can't be null");
-
-    final Node node = getById(nodeId);
-    if (node.getUserId().compareTo(userId) != 0) {
-      throw new NoSuchItemException(
-          String.format("Node with id=%s belongs to another user You can't delete them", nodeId));
-    }
-
-    return node;
   }
 }

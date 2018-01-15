@@ -34,7 +34,7 @@ public class NodeController {
   public ResponseEntity<?> getUserNodes(final Principal principal) {
     LOG.debug("Get all nodes for user with id={}", principal.getName());
     return ResponseService.success("Get node request by userId success",
-        nodeService.getNodesByUserId(principal.getName()));
+        nodeService.getAllByUserId(principal.getName()));
   }
 
   @GetMapping("/{nodeId}")
@@ -48,11 +48,10 @@ public class NodeController {
   @PutMapping("/")
   public ResponseEntity<?> addNode(@RequestBody final Node node, final Principal principal)
       throws ItemAlreadyExistsException, NoSuchUserException, NoSuchItemException {
-    node.setUserId(principal.getName());
 
     LOG.debug("Add node with url={}, name={}, userId={}", node.getUrl(), node.getName(),
         node.getUserId());
-    nodeService.add(node);
+    nodeService.add(node, principal.getName());
 
     return ResponseService.success("Node added success");
   }
@@ -69,11 +68,10 @@ public class NodeController {
   public ResponseEntity<?> updateNode(@PathVariable("nodeId") final String nodeId,
       @RequestBody final Node node, final Principal principal)
       throws ItemAlreadyExistsException, NoSuchItemException {
-    node.setUserId(principal.getName());
 
     LOG.debug("Update node with id={}, url={}, name={}, userId={}", nodeId, node.getUrl(),
         node.getName(), node.getUserId());
-    nodeService.update(node);
+    nodeService.update(node, principal.getName());
 
     return ResponseService.success("Node updated success");
   }
