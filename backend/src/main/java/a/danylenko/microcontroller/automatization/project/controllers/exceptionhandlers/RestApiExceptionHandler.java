@@ -1,10 +1,8 @@
 package a.danylenko.microcontroller.automatization.project.controllers.exceptionhandlers;
 
 
-import a.danylenko.microcontroller.automatization.project.exceptions.CantSendNotificationException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
-import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 import a.danylenko.microcontroller.automatization.project.exceptions.UsernameAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.services.impl.ResponseService;
 import org.springframework.http.HttpStatus;
@@ -20,19 +18,6 @@ public class RestApiExceptionHandler {
   public ResponseEntity<?> handleUsernameAlreadyExistsException(
       final UsernameAlreadyExistsException exception) {
     return ResponseService.failed(exception.getMessage(), HttpStatus.BAD_REQUEST);
-  }
-
-  @ExceptionHandler(NoSuchUserException.class)
-  public ResponseEntity<?> handleNoSuchUserException(final NoSuchUserException exception) {
-    return ResponseService.failed(exception.getMessage(), HttpStatus.BAD_REQUEST);
-  }
-
-  @ExceptionHandler(CantSendNotificationException.class)
-  public ResponseEntity<?> handleCantSendNotificationException(
-      final CantSendNotificationException exception) {
-    return ResponseService
-        .failed(String.format("Cant send notification, error message:%s", exception.getMessage()),
-            HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(ItemAlreadyExistsException.class)

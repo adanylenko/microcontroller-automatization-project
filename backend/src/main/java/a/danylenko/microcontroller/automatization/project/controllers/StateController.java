@@ -5,7 +5,6 @@ import java.security.Principal;
 import a.danylenko.microcontroller.automatization.project.data.entities.State;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
-import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 import a.danylenko.microcontroller.automatization.project.services.StateService;
 import a.danylenko.microcontroller.automatization.project.services.impl.ResponseService;
 import org.slf4j.Logger;
@@ -47,7 +46,7 @@ public class StateController {
 
   @PutMapping("/")
   public ResponseEntity<?> addState(@RequestBody final State state, final Principal principal)
-      throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
+      throws NoSuchItemException, ItemAlreadyExistsException {
     LOG.debug("Add state with name={} and user id={}", state.getName(), state.getUserId());
     stateService.add(state, principal.getName());
     return ResponseService.success("Add state success");
@@ -63,7 +62,7 @@ public class StateController {
 
   @PostMapping("/")
   public ResponseEntity<?> updateState(@RequestBody final State state, final Principal principal)
-      throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
+      throws NoSuchItemException, ItemAlreadyExistsException {
     LOG.debug("Update state with name={} and user id={}", state.getName(), state.getUserId());
     stateService.update(state, principal.getName());
     return ResponseService.success("State updated success");

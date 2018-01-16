@@ -36,9 +36,8 @@ public class CommandServiceImpl implements CommandService {
     Preconditions.checkNotNull(id, "Command id can't be null");
     LOG.debug("Get command by id={}", id);
 
-    final Command command = commandRepository.findOne(id);
-    if (command == null || command.getUserId() == null
-        || command.getUserId().compareTo(userId) != 0) {
+    final Command command = commandRepository.findByIdAndUserId(id, userId);
+    if (command == null) {
       throw new NoSuchItemException(String.format("Command with id=%s not found", id));
     }
     return command;
@@ -61,10 +60,8 @@ public class CommandServiceImpl implements CommandService {
     Preconditions.checkNotNull(item.getName(), "Command name can't be null");
     Preconditions.checkNotNull(item.getPins(), "Command pins can't be null");
 
-    item.setUserId(userId);
-
     LOG.debug("Save command with name={} and pins={}", item.getName(), item.getPins());
-    deviceService.getByIdAndUserId(item.getDeviceId(), item.getUserId());
+    deviceService.getByIdAndUserId(item.getDeviceId(), userId);
 
     final Command command =
         new Command(item.getName(), null, item.getPins(), item.getDeviceId(), item.getUserId());

@@ -5,7 +5,6 @@ import java.security.Principal;
 import a.danylenko.microcontroller.automatization.project.data.entities.Command;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
-import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 import a.danylenko.microcontroller.automatization.project.services.CommandService;
 import a.danylenko.microcontroller.automatization.project.services.impl.ResponseService;
 import org.slf4j.Logger;
@@ -47,7 +46,7 @@ public class CommandController {
 
   @PutMapping("/")
   public ResponseEntity<?> addCommand(@RequestBody final Command command, final Principal principal)
-      throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
+      throws NoSuchItemException, ItemAlreadyExistsException {
     LOG.debug("Add command with name={} and user id={}", command.getName(), command.getUserId());
     commandService.add(command, principal.getName());
     return ResponseService.success("Add command success");
@@ -63,8 +62,7 @@ public class CommandController {
 
   @PostMapping("/")
   public ResponseEntity<?> updateCommand(@RequestBody final Command command,
-      final Principal principal)
-      throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
+      final Principal principal) throws NoSuchItemException, ItemAlreadyExistsException {
     LOG.debug("Update command with name={} and user id={}", command.getName(), command.getUserId());
     commandService.update(command, principal.getName());
     return ResponseService.success("Command updated success");

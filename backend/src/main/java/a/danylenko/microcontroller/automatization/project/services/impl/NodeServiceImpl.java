@@ -5,7 +5,6 @@ import java.util.List;
 import a.danylenko.microcontroller.automatization.project.data.entities.Node;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
-import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 import a.danylenko.microcontroller.automatization.project.services.NodeService;
 import a.danylenko.microcontroller.automatization.project.services.repositories.NodeRepository;
 import com.google.common.base.Preconditions;
@@ -15,11 +14,9 @@ import org.slf4j.LoggerFactory;
 public class NodeServiceImpl implements NodeService {
   private final Logger LOG = LoggerFactory.getLogger(NodeServiceImpl.class);
   private final NodeRepository nodeRepository;
-//  private final UserService userService;
 
   public NodeServiceImpl(final NodeRepository nodeRepository) {
     this.nodeRepository = nodeRepository;
-//    this.userService = userService;
   }
 
   @Override
@@ -28,9 +25,8 @@ public class NodeServiceImpl implements NodeService {
     Preconditions.checkNotNull(userId, "User id can't be null");
     LOG.debug("Get node with id={} and user id={}", id, userId);
 
-    final Node node = nodeRepository.findOne(id);
-
-    if (node == null || node.getUserId() == null || node.getUserId().compareTo(userId) != 0) {
+    final Node node = nodeRepository.findByIdAndUserId(id, userId);
+    if (node == null) {
       LOG.debug("Node with id={} not found");
       throw new NoSuchItemException(String.format("Node with id=%s not found", id));
     }
@@ -47,28 +43,24 @@ public class NodeServiceImpl implements NodeService {
   }
 
   @Override
-  public void add(final Node item, final String userId)
-      throws ItemAlreadyExistsException, NoSuchUserException {
+  public void add(final Node item, final String userId) throws ItemAlreadyExistsException {
     Preconditions.checkNotNull(userId, "User id can't be null");
     Preconditions.checkNotNull(item, "Node can't be null");
     Preconditions.checkNotNull(item.getName(), "Node name can't be null");
     Preconditions.checkNotNull(item.getUrl(), "Node url can't be null");
 
-    item.setUserId(userId);
-
-    if (nodeRepository.findByUrlAndUserId(item.getUrl(), item.getUserId()) != null
-        || nodeRepository.findByUserIdAndName(item.getUserId(), item.getName()) != null) {
+    if (nodeRepository.findByUrlAndUserId(item.getUrl(), userId) != null
+        || nodeRepository.findByUserIdAndName(userId, item.getName()) != null) {
       LOG.debug("Error when try to add node with url={} and userId={}.\n Node already exists.",
-          item.getUrl(), item.getUserId());
-      throw new ItemAlreadyExistsException(String
-          .format("Node with url=%s and userId=%s already exists.", item.getUrl(),
-              item.getUserId()));
+          item.getUrl(), userId);
+      throw new ItemAlreadyExistsException(
+          String.format("Node with url=%s and userId=%s already exists.", item.getUrl(), userId));
     }
 
     LOG.debug("Node with url={}, name={} and userId={} not found add a new one.", item.getUrl(),
         item.getName(), item.getUserId());
 
-    final Node node = new Node(item.getUrl(), item.getName(), item.getUserId());
+    final Node node = new Node(item.getUrl(), item.getName(), userId);
 
     nodeRepository.save(node);
   }
@@ -102,9 +94,7 @@ public class NodeServiceImpl implements NodeService {
     Preconditions.checkNotNull(item.getName(), "Node name can't be null");
     Preconditions.checkNotNull(item.getUrl(), "Node url can't be null");
 
-    item.setUserId(userId);
-
-    final Node existsNode = getByIdAndUserId(item.getId(), item.getUserId());
+    final Node existsNode = getByIdAndUserId(item.getId(), userId);
     existsNode.setName(item.getName());
     existsNode.setUrl(item.getUrl());
 

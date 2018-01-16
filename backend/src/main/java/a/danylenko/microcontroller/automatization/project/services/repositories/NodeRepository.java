@@ -11,4 +11,6 @@ public interface NodeRepository extends JpaRepository<Node, String> {
   List<Node> findAllByUserId(final String userId);
 
   Node findByUserIdAndName(final String userId, final String name);
+
+  Node findByIdAndUserId(final String id, final String userId);
 }

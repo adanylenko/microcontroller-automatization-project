@@ -9,4 +9,6 @@ public interface CommandRepository extends JpaRepository<Command, String> {
   List<Command> findAllByDeviceId(final String deviceId);
 
   List<Command> findAllByUserId(final String userId);
+
+  Command findByIdAndUserId(final String id, final String userId);
 }

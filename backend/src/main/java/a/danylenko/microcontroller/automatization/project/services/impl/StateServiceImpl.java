@@ -5,7 +5,6 @@ import java.util.List;
 import a.danylenko.microcontroller.automatization.project.data.entities.State;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
-import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 import a.danylenko.microcontroller.automatization.project.services.CommandService;
 import a.danylenko.microcontroller.automatization.project.services.StateService;
 import a.danylenko.microcontroller.automatization.project.services.repositories.StateRepository;
@@ -36,8 +35,8 @@ public class StateServiceImpl implements StateService {
     Preconditions.checkNotNull(userId, "User id can't be null");
     Preconditions.checkNotNull(id, "State id can't be null");
 
-    final State state = stateRepository.findOne(id);
-    if (state == null || state.getUserId() == null || state.getUserId().compareTo(userId) != 0) {
+    final State state = stateRepository.findByIdAndUserId(id, userId);
+    if (state == null) {
       throw new NoSuchItemException(String.format("State with id=%s not found", id));
     }
     return state;
@@ -53,20 +52,17 @@ public class StateServiceImpl implements StateService {
 
   @Override
   public void add(final State item, final String userId)
-      throws ItemAlreadyExistsException, NoSuchUserException, NoSuchItemException {
+      throws ItemAlreadyExistsException, NoSuchItemException {
     Preconditions.checkNotNull(userId, "User id can't be null");
     Preconditions.checkNotNull(item, "State can't be null");
     Preconditions.checkNotNull(item.getCommandId(), "State can't be null");
     Preconditions.checkNotNull(item.getName(), "State can't be null");
     Preconditions.checkNotNull(item.getValue(), "State can't be null");
 
-    item.setUserId(userId);
-
     LOG.debug("Add state with name={} for user with id={}", item.getName(), item.getUserId());
 
     commandService.getByIdAndUserId(item.getCommandId(), userId);
-    final State state =
-        new State(item.getCommandId(), item.getName(), item.getValue(), item.getUserId());
+    final State state = new State(item.getCommandId(), item.getName(), item.getValue(), userId);
 
     stateRepository.save(state);
   }

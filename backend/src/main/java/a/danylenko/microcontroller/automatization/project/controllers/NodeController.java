@@ -5,7 +5,6 @@ import java.security.Principal;
 import a.danylenko.microcontroller.automatization.project.data.entities.Node;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
-import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 import a.danylenko.microcontroller.automatization.project.services.NodeService;
 import a.danylenko.microcontroller.automatization.project.services.impl.ResponseService;
 import org.slf4j.Logger;
@@ -47,7 +46,7 @@ public class NodeController {
 
   @PutMapping("/")
   public ResponseEntity<?> addNode(@RequestBody final Node node, final Principal principal)
-      throws ItemAlreadyExistsException, NoSuchUserException, NoSuchItemException {
+      throws ItemAlreadyExistsException, NoSuchItemException {
 
     LOG.debug("Add node with url={}, name={}, userId={}", node.getUrl(), node.getName(),
         node.getUserId());

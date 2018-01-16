@@ -5,7 +5,6 @@ import java.security.Principal;
 import a.danylenko.microcontroller.automatization.project.data.entities.Device;
 import a.danylenko.microcontroller.automatization.project.exceptions.ItemAlreadyExistsException;
 import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchItemException;
-import a.danylenko.microcontroller.automatization.project.exceptions.NoSuchUserException;
 import a.danylenko.microcontroller.automatization.project.services.DeviceService;
 import a.danylenko.microcontroller.automatization.project.services.impl.ResponseService;
 import org.slf4j.Logger;
@@ -54,7 +53,7 @@ public class DeviceController {
 
   @PutMapping("/")
   public ResponseEntity<?> addDevice(@RequestBody final Device device, final Principal principal)
-      throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
+      throws NoSuchItemException, ItemAlreadyExistsException {
     LOG.debug("Add device with name={} and user id={}", device.getName(), device.getUserId());
     deviceService.add(device, principal.getName());
     return ResponseService.success("Add device success");
@@ -71,7 +70,7 @@ public class DeviceController {
   @PostMapping("/{deviceId}")
   public ResponseEntity<?> updateDevice(@PathVariable("deviceId") final String nodeId,
       @RequestBody final Device device, final Principal principal)
-      throws NoSuchItemException, ItemAlreadyExistsException, NoSuchUserException {
+      throws NoSuchItemException, ItemAlreadyExistsException {
     LOG.debug("Update device with id={} name={} and user id={}", nodeId, device.getName(),
         device.getUserId());
     deviceService.update(device, principal.getName());
