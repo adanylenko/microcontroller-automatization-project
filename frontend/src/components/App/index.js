@@ -10,6 +10,7 @@ import SidebarItem from "../SidebarItem";
 import "./styles.css";
 import Devices from "../Devices";
 import Nodes from "../Nodes";
+import DeviceDetailPage from "../Devices/DetailsPage";
 
 class App extends Component {
   static propTypes = {
@@ -40,7 +41,7 @@ class App extends Component {
   renderSidebar() {
     return (
       <Row className="app-container">
-        <Col xs={5} sm={3} md={2} lg={2} className="sidebar">
+        <Col className="sidebar">
           <Sidebar headerComponent={this.renderSidebarHeader()}>
             <SidebarItem
               to="/nodes"
@@ -69,20 +70,11 @@ class App extends Component {
           </div>
         </Col>
 
-        <Col
-          xs={7}
-          sm={9}
-          md={10}
-          lg={10}
-          xsOffset={5}
-          smOffset={3}
-          mdOffset={2}
-          lgOffset={2}
-          className="main-content"
-        >
+        <Col className="main-content">
           <Switch>
             <Route path="/nodes" component={Nodes} />
             <Route path="/devices" component={Devices} />
+            <Route path="/device/:id" component={DeviceDetailPage} />
           </Switch>
         </Col>
       </Row>

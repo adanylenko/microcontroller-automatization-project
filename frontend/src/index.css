@@ -19,6 +19,9 @@ body,
   display: flex;
   flex-direction: column;
   background-color: var(--main-bg-color);
+
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .progress-overlay-wrapper {
@@ -72,10 +75,60 @@ body,
   color: red;
 }
 
+.blue {
+  color: blue;
+}
+
 .modal-dialog-footer button {
   margin: 10px !important;
 }
 
 .tableToolbar button {
   width: 80px;
+}
+
+.link-details {
+  color: var(--sidebar-bg-color);
+}
+
+.full-size-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+  font-size: 2em;
+}
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.info-row {
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+.sidebar {
+  width: 200px;
+}
+
+.main-content {
+  /* display: block; */
+  margin-left: 200px;
+  /* min-width: 700px; */
+  overflow-x: auto;
+}
+
+.table-header {
+  padding-left: 30px;
+  font-size: 25px;
+}
+
+.table-container {
+  padding-top: 20px;
 }

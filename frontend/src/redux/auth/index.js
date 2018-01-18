@@ -2,6 +2,8 @@ import auth0 from "auth0-js";
 import { AUTH_CONFIG } from "./auth0-variables";
 
 export default class Auth {
+  tokenRenewalTimeout;
+
   auth0 = new auth0.WebAuth({
     domain: AUTH_CONFIG.domain,
     clientID: AUTH_CONFIG.clientId,
@@ -18,7 +20,8 @@ export default class Auth {
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.parseHash = this.parseHash.bind(this);
     this.getSessionData = this.getSessionData.bind(this);
-    this.scheduleRenewal();
+    // this.scheduleRenewal = this.scheduleRenewal.bind(this);
+    // this.scheduleRenewal();
   }
 
   handleAuthentication() {
@@ -58,6 +61,7 @@ export default class Auth {
     localStorage.removeItem("access_token");
     localStorage.removeItem("id_token");
     localStorage.removeItem("expires_at");
+    // clearTimeout(this.tokenRenewalTimeout);
     // navigate to the home route
   }
 

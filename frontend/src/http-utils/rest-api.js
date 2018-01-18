@@ -52,6 +52,42 @@ export const RestApi = {
   },
   RemoveDevice: (idToken, id) => {
     return ApiCall(RestUrls.DEVICES_URL(id), idToken, null, "DELETE");
+  },
+
+  ListCommands: (idToken, deviceId) => {
+    return ApiCall(
+      RestUrls.COMMANDS_URL.listByDeviceId(deviceId),
+      idToken,
+      null,
+      "GET"
+    );
+  },
+  AddCommand: (idToken, command) => {
+    return ApiCall(RestUrls.COMMANDS_URL.base(), idToken, command, "PUT");
+  },
+  SaveCommand: (idToken, id, command) => {
+    return ApiCall(RestUrls.COMMANDS_URL.base(id), idToken, command, "POST");
+  },
+  RemoveCommand: (idToken, id) => {
+    return ApiCall(RestUrls.COMMANDS_URL.base(id), idToken, null, "DELETE");
+  },
+
+  ListStates: (idToken, commandId) => {
+    return ApiCall(
+      RestUrls.STATES_URL.listByCommandId(commandId),
+      idToken,
+      null,
+      "GET"
+    );
+  },
+  AddState: (idToken, state) => {
+    return ApiCall(RestUrls.STATES_URL.base(), idToken, state, "PUT");
+  },
+  SaveState: (idToken, id, state) => {
+    return ApiCall(RestUrls.STATES_URL.base(id), idToken, state, "POST");
+  },
+  RemoveState: (idToken, id) => {
+    return ApiCall(RestUrls.STATES_URL.base(id), idToken, null, "DELETE");
   }
 };
 

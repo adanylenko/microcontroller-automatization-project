@@ -2,7 +2,7 @@ spring.datasource.url=database_url
 spring.datasource.username=username
 spring.datasource.password=password
 spring.datasource.driver-class-name=database_jdbc_driver_class
-spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.hibernate.ddl-auto=update
 
 server.contextPath=/api
 spring.jpa.show-sql=true

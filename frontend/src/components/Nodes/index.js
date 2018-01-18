@@ -77,28 +77,26 @@ export class Nodes extends Component {
           >
             Name
           </TableHeaderColumn>
-          {
-            <TableHeaderColumn
-              dataField="isOnline"
-              dataAlign="center"
-              filter={{
-                type: "SelectFilter",
-                options: { true: "Yes", false: "No" }
-              }}
-              dataFormat={(cell, x) => (
-                <span>
-                  <FontAwesome
-                    name="circle"
-                    className={
-                      x.online || x.name.match("^test1") ? "green" : "red"
-                    }
-                  />
-                </span>
-              )}
-            >
-              Is online?
-            </TableHeaderColumn>
-          }
+          <TableHeaderColumn
+            dataField="isOnline"
+            dataAlign="center"
+            filter={{
+              type: "SelectFilter",
+              options: { true: "Yes", false: "No" }
+            }}
+            dataFormat={(cell, x) => (
+              <span>
+                <FontAwesome
+                  name="circle"
+                  className={
+                    x.online || x.name.match("^test1") ? "green" : "red"
+                  }
+                />
+              </span>
+            )}
+          >
+            Is online?
+          </TableHeaderColumn>
         </SmartTable>
         <NodeAdd
           showModal={this.state.addNodeShow}

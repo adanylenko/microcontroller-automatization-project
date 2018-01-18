@@ -6,6 +6,7 @@ import { DckActionCreators, DckSelectors } from "dck-redux";
 import { ProgressOverlay, InternalPage } from "dck-react-components";
 import { TableHeaderColumn } from "react-bootstrap-table";
 import * as FontAwesome from "react-fontawesome";
+import { Link } from "react-router-dom";
 
 import * as ItemTypes from "../../redux/items/types";
 import * as ProcessTypes from "../../redux/processes/types";
@@ -110,6 +111,15 @@ export class Devices extends Component {
           >
             Type
           </TableHeaderColumn>
+          <TableHeaderColumn
+            dataField="id"
+            dataAlign="center"
+            dataFormat={(cell, x) => (
+              <Link to={`/device/${x.id}`} className="link-details">
+                Details&nbsp;<FontAwesome name="chevron-right" />
+              </Link>
+            )}
+          />
         </SmartTable>
         <DeviceAdd
           showModal={this.state.addModalShow}

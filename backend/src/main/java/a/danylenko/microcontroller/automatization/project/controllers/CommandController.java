@@ -60,10 +60,11 @@ public class CommandController {
     return ResponseService.success("Command deleted success");
   }
 
-  @PostMapping("/")
-  public ResponseEntity<?> updateCommand(@RequestBody final Command command,
-      final Principal principal) throws NoSuchItemException, ItemAlreadyExistsException {
-    LOG.debug("Update command with name={} and user id={}", command.getName(), command.getUserId());
+  @PostMapping("/{commandId}")
+  public ResponseEntity<?> updateCommand(@PathVariable("commandId") final String commandId,
+      @RequestBody final Command command, final Principal principal)
+      throws NoSuchItemException, ItemAlreadyExistsException {
+    LOG.debug("Update command with id={} and user id={}", commandId, command.getUserId());
     commandService.update(command, principal.getName());
     return ResponseService.success("Command updated success");
   }

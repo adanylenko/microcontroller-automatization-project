@@ -17,14 +17,17 @@ import * as FontAwesome from "react-fontawesome";
 import initField from "../../utils/form-builder";
 import ModalDialog from "../ModalWindow";
 
-class DeviceForm extends Component {
+class CommandForm extends Component {
   constructor(props) {
     super(props);
     this.state = this.getInitState();
+
+    console.log("device=", this.props.device);
   }
 
   static propTypes = {
-    device: PropTypes.object.isRequired,
+    command: PropTypes.object.isRequired,
+    device: PropTypes.object,
     onSaveClicked: PropTypes.func.isRequired,
     failed: PropTypes.any,
     processRunning: PropTypes.any,
@@ -32,8 +35,7 @@ class DeviceForm extends Component {
     hideModal: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
-    onSuccess: PropTypes.func.isRequired,
-    nodes: PropTypes.array
+    onSuccess: PropTypes.func.isRequired
   };
 
   componentWillReceiveProps(newProps) {
@@ -43,51 +45,44 @@ class DeviceForm extends Component {
   }
 
   getInitState() {
-    const isNew = !!this.props.device.id;
+    const isNew = !!this.props.command.id;
 
     return {
       isNew: isNew,
       ...initField(
         this,
         "name",
-        this.props.device.name ? this.props.device.name : "",
+        this.props.command.name ? this.props.command.name : "",
         nonEmpty,
         isNew
       ),
       ...initField(
         this,
         "pins",
-        this.props.device.pins ? this.props.device.pins : "",
-        this.separatedNumber,
+        this.props.command.pins ? this.props.command.pins : "",
+        this.arrayCheck,
         isNew
       ),
       ...initField(
         this,
         "type",
-        this.props.device.type ? this.props.device.type : "",
-        nonEmpty,
-        isNew
-      ),
-      ...initField(
-        this,
-        "node_id",
-        this.props.device.nodeId ? this.props.device.nodeId : "",
+        this.props.command.type ? this.props.command.type : "",
         nonEmpty,
         isNew
       )
     };
   }
 
-  separatedNumber(value) {
+  arrayCheck(value) {
     return new Promise((resolve, reject) => {
       let empty = false;
 
       let valid = false;
 
-      if (!value || value.trim().length === 0) {
+      if (!value || value.length === 0) {
         empty = true;
       } else {
-        if (value.match(new RegExp("^[1-9][0-9]*(,[0-9]+)*$", "g"))) {
+        if (value.length) {
           valid = true;
         }
       }
@@ -102,9 +97,7 @@ class DeviceForm extends Component {
       this.state.pins.validation &&
       this.state.pins.validation.valid &&
       this.state.type.validation &&
-      this.state.type.validation.valid &&
-      this.state.node_id.validation &&
-      this.state.node_id.validation.valid
+      this.state.type.validation.valid
     );
   }
 
@@ -112,15 +105,17 @@ class DeviceForm extends Component {
     this.state.name.validationCurrentValue();
     this.state.pins.validationCurrentValue();
     this.state.type.validationCurrentValue();
-    this.state.node_id.validationCurrentValue();
 
     if (this.valid() && !this.props.processRunning) {
       this.props.onSaveClicked({
-        id: this.props.device.id,
+        id: this.props.command.id,
         name: this.state.name.value,
-        pins: this.state.pins.value,
+        pins:
+          this.state.pins.value && this.state.pins.value.length
+            ? this.state.pins.value.map(item => item.value).join(",")
+            : "",
         type: this.state.type.value,
-        nodeId: this.state.node_id.value
+        deviceId: this.props.device.id
       });
     }
   }
@@ -141,11 +136,11 @@ class DeviceForm extends Component {
     return (
       <ModalDialog
         title={this.props.title}
-        okButtonTitle={this.props.device.id ? "Edit Device" : "Add Device"}
+        okButtonTitle={this.props.command.id ? "Edit Command" : "Add Command"}
         show={this.props.show}
-        cancelButtonStyle="device-form-cancel-button"
-        okButtonStyle="device-form-ok-button"
-        bodyClass="device-form-body-class"
+        cancelButtonStyle="command-form-cancel-button"
+        okButtonStyle="command-form-ok-button"
+        bodyClass="command-form-body-class"
         okButtonDisabled={this.props.processRunning}
         close={() => {
           this.props.hideModal();
@@ -157,24 +152,28 @@ class DeviceForm extends Component {
           const initState = this.getInitState();
           this.setState(initState);
 
-          if (this.props.device.id) {
+          if (this.props.command.id) {
             this.state.name.setValue(
-              this.props.device.name ? this.props.device.name : ""
+              this.props.command.name ? this.props.command.name : ""
             );
             this.state.pins.setValue(
-              this.props.device.pins ? this.props.device.pins : ""
+              this.props.command.pins && this.props.command.pins.length
+                ? this.props.command.pins.split(",").map(item => {
+                    return {
+                      label: item,
+                      value: item
+                    };
+                  })
+                : []
             );
             this.state.type.setValue(
-              this.props.device.type ? this.props.device.type : ""
-            );
-            this.state.node_id.setValue(
-              this.props.device.nodeId ? this.props.device.nodeId : ""
+              this.props.command.type ? this.props.command.type : ""
             );
           }
         }}
       >
         <form
-          className="device-form"
+          className="command-form"
           onSubmit={e => {
             e.preventDefault();
             this.saveClicked();
@@ -184,61 +183,25 @@ class DeviceForm extends Component {
           <FieldGroup
             id="name"
             type="text"
-            label="Device name"
-            placeholder="Enter device name"
+            label="Command name"
+            placeholder="Enter command name"
             value={this.state.name.value}
             onChange={this.state.name.onChange}
             validationState={this.state.name.validation}
-            validationMessage="Device name must not be empty"
+            validationMessage="Command name must not be empty"
             bsClass="item-form-control form-control"
           />
 
           <FormGroup
-            controlId="node-select"
-            validationState={this.getValidationState(
-              this.state.node_id.validation
-            )}
-          >
-            <ControlLabel>Device node</ControlLabel>
-            <Select
-              className="react-select"
-              placeholder="Select node"
-              value={this.state.node_id.value}
-              clearable={false}
-              searchable={true}
-              options={
-                this.props.nodes
-                  ? this.props.nodes.map(item => ({
-                      label: item.name,
-                      value: item.id
-                    }))
-                  : []
-              }
-              onChange={event =>
-                event ? this.state.node_id.setValue(event.value) : ""
-              }
-            />
-            {this.state.node_id.validation &&
-            !this.state.node_id.validation.valid ? (
-              <HelpBlock>
-                <FontAwesome name="exclamation-circle" />&nbsp; Select device
-                node
-              </HelpBlock>
-            ) : (
-              <HelpBlock>&nbsp;</HelpBlock>
-            )}
-          </FormGroup>
-
-          <FormGroup
-            controlId="device-type-select"
+            controlId="command-type-select"
             validationState={this.getValidationState(
               this.state.type.validation
             )}
           >
-            <ControlLabel>Device type</ControlLabel>
+            <ControlLabel>Command type</ControlLabel>
             <Select
               className="react-select"
-              placeholder="Select device type"
+              placeholder="Select command type"
               value={this.state.type.value}
               clearable={false}
               searchable={false}
@@ -258,7 +221,7 @@ class DeviceForm extends Component {
             />
             {this.state.type.validation && !this.state.type.validation.valid ? (
               <HelpBlock>
-                <FontAwesome name="exclamation-circle" />&nbsp; Select device
+                <FontAwesome name="exclamation-circle" />&nbsp; Select command
                 type
               </HelpBlock>
             ) : (
@@ -266,17 +229,41 @@ class DeviceForm extends Component {
             )}
           </FormGroup>
 
-          <FieldGroup
-            id="pins"
-            type="text"
-            label="Device pins"
-            placeholder="Enter device pins"
-            value={this.state.pins.value}
-            onChange={this.state.pins.onChange}
-            validationState={this.state.pins.validation}
-            validationMessage="Device pins must not be empty"
-            bsClass="item-form-control form-control"
-          />
+          <FormGroup
+            controlId="command-type-select"
+            validationState={this.getValidationState(
+              this.state.pins.validation
+            )}
+          >
+            <ControlLabel>Command pins</ControlLabel>
+            <Select
+              className="react-select"
+              placeholder="Select command pins"
+              value={this.state.pins.value}
+              clearable={false}
+              searchable={false}
+              multi={true}
+              options={
+                this.props.device && this.props.device.pins
+                  ? this.props.device.pins.split(",").map(item => {
+                      return {
+                        label: item,
+                        value: item
+                      };
+                    })
+                  : []
+              }
+              onChange={event => (event ? this.state.pins.setValue(event) : "")}
+            />
+            {this.state.pins.validation && !this.state.pins.validation.valid ? (
+              <HelpBlock>
+                <FontAwesome name="exclamation-circle" />&nbsp; Select command
+                pin
+              </HelpBlock>
+            ) : (
+              <HelpBlock>&nbsp;</HelpBlock>
+            )}
+          </FormGroup>
         </form>
 
         {this.props.processRunning && (
@@ -298,4 +285,4 @@ class DeviceForm extends Component {
   }
 }
 
-export default DeviceForm;
+export default CommandForm;

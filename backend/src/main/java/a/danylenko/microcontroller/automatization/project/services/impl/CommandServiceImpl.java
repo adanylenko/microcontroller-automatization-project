@@ -64,7 +64,8 @@ public class CommandServiceImpl implements CommandService {
     deviceService.getByIdAndUserId(item.getDeviceId(), userId);
 
     final Command command =
-        new Command(item.getName(), null, item.getPins(), item.getDeviceId(), item.getUserId());
+        new Command(item.getName(), null, item.getPins(), item.getDeviceId(), userId,
+            item.getType());
     commandRepository.save(command);
   }
 
@@ -93,6 +94,7 @@ public class CommandServiceImpl implements CommandService {
     existsCommand.setDeviceId(item.getDeviceId());
     existsCommand.setName(item.getName());
     existsCommand.setPins(item.getPins());
+    existsCommand.setType(item.getType());
 
     commandRepository.save(existsCommand);
   }

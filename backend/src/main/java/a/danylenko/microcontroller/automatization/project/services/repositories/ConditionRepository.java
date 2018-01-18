@@ -9,4 +9,6 @@ public interface ConditionRepository extends JpaRepository<Condition, String> {
   List<Condition> findAllByUserId(final String userId);
 
   Condition findByIdAndUserId(final String id, final String userId);
+
+  List<Condition> findAllByCommandId(final String commandId);
 }
