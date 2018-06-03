@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import * as ProcessTypes from "../../redux/processes/types";
 import * as ItemTypes from "../../redux/items/types";
 import CommandsTable from "../Commands/Table";
+import CommandHistoryTabe from "../CommandsHistory";
 
 class DeviceDetailPage extends Component {
   static propTypes = {
@@ -17,7 +18,9 @@ class DeviceDetailPage extends Component {
     makeDeviceActive: PropTypes.func.isRequired,
     currentDeviceId: PropTypes.string.isRequired,
     selectNodeById: PropTypes.func.isRequired,
-    loadCommands: PropTypes.func.isRequired
+    loadCommands: PropTypes.func.isRequired,
+    loadCommandsHistory: PropTypes.func.isRequired,
+    commandsHistory: PropTypes.array
     // addDevice: PropTypes.func.isRequired,
     // creating: PropTypes.any,
     // failed: PropTypes.any,
@@ -34,6 +37,7 @@ class DeviceDetailPage extends Component {
     this.props.loadDevices();
     this.props.makeDeviceActive(this.props.currentDeviceId);
     this.props.loadCommands();
+    this.props.loadCommandsHistory();
   }
 
   render() {
@@ -54,6 +58,12 @@ class DeviceDetailPage extends Component {
       >
         {this.renderDeviceDetails()}
         <CommandsTable />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <CommandHistoryTabe items={this.props.commandsHistory} />
       </InternalPage>
     ) : (
       <div className="full-size-container red">
@@ -83,16 +93,6 @@ class DeviceDetailPage extends Component {
           <Col className="info-col-value" md={9} xs={7}>
             {this.props.selectNodeById(this.props.currentDevice.nodeId)
               ? this.props.selectNodeById(this.props.currentDevice.nodeId).name
-              : "N/A"}
-          </Col>
-        </Row>
-        <Row className="info-row">
-          <Col className="info-col-name" md={3} xs={5}>
-            Type:
-          </Col>
-          <Col className="info-col-value" md={9} xs={7}>
-            {this.props.currentDevice.type
-              ? this.props.currentDevice.type
               : "N/A"}
           </Col>
         </Row>
@@ -154,7 +154,12 @@ const mapStateToProps = (state, ownProps) => {
       ownProps.match.params.id
     ),
     currentDeviceId: ownProps.match.params.id,
-    selectNodeById: id => DckSelectors.selectItemById(state, ItemTypes.Node, id)
+    selectNodeById: id =>
+      DckSelectors.selectItemById(state, ItemTypes.Node, id),
+    commandsHistory: DckSelectors.selectAllItems(
+      state,
+      ItemTypes.CommandHistory
+    )
   };
 
   return mapping;
@@ -167,7 +172,9 @@ const mapDispatchToProps = dispatch => {
     loadCommands: () =>
       dispatch(DckActionCreators.itemsLoad(ItemTypes.Command)),
     makeDeviceActive: id =>
-      dispatch(DckActionCreators.itemMakeActive(ItemTypes.Device, id))
+      dispatch(DckActionCreators.itemMakeActive(ItemTypes.Device, id)),
+    loadCommandsHistory: () =>
+      dispatch(DckActionCreators.itemsLoad(ItemTypes.CommandHistory))
   };
 };
 

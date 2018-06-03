@@ -17,6 +17,7 @@ public class Node {
   private String url;
   private String name;
   private String userId;
+  private boolean online;
 
   public Node() {
     //default constructor
@@ -26,5 +27,12 @@ public class Node {
     this.url = url;
     this.name = name;
     this.userId = userId;
+  }
+
+  public Node(final String url, final String name, final String userId, final boolean online) {
+    this.url = url;
+    this.name = name;
+    this.userId = userId;
+    this.online = online;
   }
 }

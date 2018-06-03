@@ -78,7 +78,7 @@ export class Nodes extends Component {
             Name
           </TableHeaderColumn>
           <TableHeaderColumn
-            dataField="isOnline"
+            dataField="online"
             dataAlign="center"
             filter={{
               type: "SelectFilter",

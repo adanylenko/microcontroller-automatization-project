@@ -61,13 +61,11 @@ public class DeviceServiceImpl implements DeviceService {
     Preconditions.checkNotNull(item.getName(), "Device name can't be null");
     Preconditions.checkNotNull(item.getNodeId(), "Node id can't be null");
     Preconditions.checkNotNull(item.getPins(), "Device pins can't be null");
-    Preconditions.checkNotNull(item.getType(), "Device type can't be null");
 
     LOG.debug("Add device with name={} and node id={}", item.getName(), item.getNodeId());
     nodeService.getByIdAndUserId(item.getNodeId(), userId);
 
-    final Device device =
-        new Device(item.getName(), item.getType(), item.getPins(), item.getNodeId(), userId);
+    final Device device = new Device(item.getName(), item.getPins(), item.getNodeId(), userId);
 
     deviceRepository.save(device);
   }
@@ -90,7 +88,6 @@ public class DeviceServiceImpl implements DeviceService {
     Preconditions.checkNotNull(item.getName(), "Device name can't be null");
     Preconditions.checkNotNull(item.getNodeId(), "Node id can't be null");
     Preconditions.checkNotNull(item.getPins(), "Device pins can't be null");
-    Preconditions.checkNotNull(item.getType(), "Device type can't be null");
 
     LOG.debug("Update device with id={}", item.getId());
     nodeService.getByIdAndUserId(item.getNodeId(), userId);
@@ -98,7 +95,6 @@ public class DeviceServiceImpl implements DeviceService {
     final Device existsDevice = getByIdAndUserId(item.getId(), userId);
     existsDevice.setName(item.getName());
     existsDevice.setPins(item.getPins());
-    existsDevice.setType(item.getType());
     existsDevice.setNodeId(item.getNodeId());
 
     deviceRepository.save(existsDevice);

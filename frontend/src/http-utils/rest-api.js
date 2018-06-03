@@ -88,6 +88,14 @@ export const RestApi = {
   },
   RemoveState: (idToken, id) => {
     return ApiCall(RestUrls.STATES_URL.base(id), idToken, null, "DELETE");
+  },
+  ListCommandsHistory: (idToken, deviceId) => {
+    return ApiCall(
+      RestUrls.COMMANDS_HISTORY_URL.listByDeviceId(deviceId),
+      idToken,
+      null,
+      "GET"
+    );
   }
 };
 

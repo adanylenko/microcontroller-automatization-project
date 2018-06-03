@@ -1,0 +1,40 @@
+CREATE DATABASE `controllers_automatic` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+CREATE TABLE `controllers_automatic`.`command` (
+  `id` varchar(255) NOT NULL,
+  `current_state` varchar(255) DEFAULT NULL,
+  `device_id` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `pins` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `controllers_automatic`.`device` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `node_id` varchar(255) DEFAULT NULL,
+  `pins` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `controllers_automatic`.`node` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `online` bit(1) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `controllers_automatic`.`state` (
+  `id` varchar(255) NOT NULL,
+  `command_id` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

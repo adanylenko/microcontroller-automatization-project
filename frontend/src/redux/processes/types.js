@@ -17,3 +17,5 @@ export const STATES_LOAD = "STATES_LOAD";
 export const STATES_ADD = "STATES_ADD";
 export const STATES_SAVE = "STATES_SAVE";
 export const STATES_REMOVE = "STATES_REMOVE";
+
+export const COMMAND_HISTORY_LOAD = "COMMAND_HISTORY_LOAD";

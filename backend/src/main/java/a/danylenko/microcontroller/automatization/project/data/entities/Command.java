@@ -6,7 +6,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import a.danylenko.microcontroller.automatization.project.data.DeviceType;
+import a.danylenko.microcontroller.automatization.project.data.CommandType;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -24,14 +24,14 @@ public class Command {
   private String userId;
 
   @Enumerated(EnumType.STRING)
-  private DeviceType type;
+  private CommandType type;
 
   public Command() {
     //default constructor
   }
 
   public Command(final String name, final String currentState, final String pins,
-      final String deviceId, final String userId, final DeviceType type) {
+      final String deviceId, final String userId, final CommandType type) {
     this.name = name;
     this.currentState = currentState;
     this.pins = pins;

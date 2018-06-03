@@ -52,32 +52,34 @@ class SmartTable extends Component {
           {this.props.children}
         </BootstrapTable>
         <br />
-        <ButtonToolbar className="tableToolbar">
-          {this.props.addClick && (
-            <Button bsStyle="primary" onClick={() => this.props.addClick()}>
-              Add
-            </Button>
-          )}
-          {this.props.editClick && (
-            <Button
-              bsStyle="default"
-              onClick={() => this.props.editClick()}
-              disabled={!this.state.itemSelected}
-            >
-              Edit
-            </Button>
-          )}
-          {this.props.deleteClick &&
-            this.props.onSuccessRemove && (
-              <Button
-                bsStyle="danger"
-                onClick={() => this.setState({ showRemoveModal: true })}
-                disabled={!this.state.itemSelected}
-              >
-                Remove
+        {!this.props.hideButtons && (
+          <ButtonToolbar className="tableToolbar">
+            {this.props.addClick && (
+              <Button bsStyle="primary" onClick={() => this.props.addClick()}>
+                Add
               </Button>
             )}
-        </ButtonToolbar>
+            {this.props.editClick && (
+              <Button
+                bsStyle="default"
+                onClick={() => this.props.editClick()}
+                disabled={!this.state.itemSelected}
+              >
+                Edit
+              </Button>
+            )}
+            {this.props.deleteClick &&
+              this.props.onSuccessRemove && (
+                <Button
+                  bsStyle="danger"
+                  onClick={() => this.setState({ showRemoveModal: true })}
+                  disabled={!this.state.itemSelected}
+                >
+                  Remove
+                </Button>
+              )}
+          </ButtonToolbar>
+        )}
         {this.props.deleteClick &&
           this.props.onSuccessRemove && (
             <RemoveWindow
@@ -124,7 +126,8 @@ SmartTable.propTypes = {
   removeProcessFailed: PropTypes.any,
   removeProcessRunning: PropTypes.any,
   removeProcessSuccess: PropTypes.any,
-  onSuccessRemove: PropTypes.func
+  onSuccessRemove: PropTypes.func,
+  hideButtons: PropTypes.bool
 };
 
 export default SmartTable;

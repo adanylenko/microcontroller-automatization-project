@@ -63,13 +63,6 @@ class DeviceForm extends Component {
       ),
       ...initField(
         this,
-        "type",
-        this.props.device.type ? this.props.device.type : "",
-        nonEmpty,
-        isNew
-      ),
-      ...initField(
-        this,
         "node_id",
         this.props.device.nodeId ? this.props.device.nodeId : "",
         nonEmpty,
@@ -101,8 +94,6 @@ class DeviceForm extends Component {
       this.state.name.validation.valid &&
       this.state.pins.validation &&
       this.state.pins.validation.valid &&
-      this.state.type.validation &&
-      this.state.type.validation.valid &&
       this.state.node_id.validation &&
       this.state.node_id.validation.valid
     );
@@ -111,7 +102,6 @@ class DeviceForm extends Component {
   saveClicked() {
     this.state.name.validationCurrentValue();
     this.state.pins.validationCurrentValue();
-    this.state.type.validationCurrentValue();
     this.state.node_id.validationCurrentValue();
 
     if (this.valid() && !this.props.processRunning) {
@@ -119,7 +109,6 @@ class DeviceForm extends Component {
         id: this.props.device.id,
         name: this.state.name.value,
         pins: this.state.pins.value,
-        type: this.state.type.value,
         nodeId: this.state.node_id.value
       });
     }
@@ -163,9 +152,6 @@ class DeviceForm extends Component {
             );
             this.state.pins.setValue(
               this.props.device.pins ? this.props.device.pins : ""
-            );
-            this.state.type.setValue(
-              this.props.device.type ? this.props.device.type : ""
             );
             this.state.node_id.setValue(
               this.props.device.nodeId ? this.props.device.nodeId : ""
@@ -223,43 +209,6 @@ class DeviceForm extends Component {
               <HelpBlock>
                 <FontAwesome name="exclamation-circle" />&nbsp; Select device
                 node
-              </HelpBlock>
-            ) : (
-              <HelpBlock>&nbsp;</HelpBlock>
-            )}
-          </FormGroup>
-
-          <FormGroup
-            controlId="device-type-select"
-            validationState={this.getValidationState(
-              this.state.type.validation
-            )}
-          >
-            <ControlLabel>Device type</ControlLabel>
-            <Select
-              className="react-select"
-              placeholder="Select device type"
-              value={this.state.type.value}
-              clearable={false}
-              searchable={false}
-              options={[
-                {
-                  label: "INPUT",
-                  value: "INPUT"
-                },
-                {
-                  label: "OUTPUT",
-                  value: "OUTPUT"
-                }
-              ]}
-              onChange={event =>
-                event ? this.state.type.setValue(event.value) : ""
-              }
-            />
-            {this.state.type.validation && !this.state.type.validation.valid ? (
-              <HelpBlock>
-                <FontAwesome name="exclamation-circle" />&nbsp; Select device
-                type
               </HelpBlock>
             ) : (
               <HelpBlock>&nbsp;</HelpBlock>

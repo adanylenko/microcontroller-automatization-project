@@ -1,5 +1,5 @@
 package a.danylenko.microcontroller.automatization.project.data;
 
-public enum DeviceType {
+public enum CommandType {
   INPUT, OUTPUT
 }
