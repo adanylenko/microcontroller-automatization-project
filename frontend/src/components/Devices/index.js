@@ -101,17 +101,6 @@ export class Devices extends Component {
             Pins
           </TableHeaderColumn>
           <TableHeaderColumn
-            dataField="type"
-            dataAlign="center"
-            dataSort={true}
-            filter={{
-              type: "SelectFilter",
-              options: { INPUT: "INPUT", OUTPUT: "OUTPUT" }
-            }}
-          >
-            Type
-          </TableHeaderColumn>
-          <TableHeaderColumn
             dataField="id"
             dataAlign="center"
             dataFormat={(cell, x) => (

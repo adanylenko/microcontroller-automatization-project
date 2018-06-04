@@ -19,17 +19,19 @@ public class CommandHistory {
   private long timestamp;
   private boolean result;
   private String response;
+  private String userId;
 
   public CommandHistory() {
     //default constructor
   }
 
   public CommandHistory(final String deviceId, final String commandId, final long timestamp,
-      boolean result, final String response) {
+      boolean result, final String response, final String userId) {
     this.deviceId = deviceId;
     this.commandId = commandId;
     this.timestamp = timestamp;
     this.result = result;
     this.response = response;
+    this.userId = userId;
   }
 }
