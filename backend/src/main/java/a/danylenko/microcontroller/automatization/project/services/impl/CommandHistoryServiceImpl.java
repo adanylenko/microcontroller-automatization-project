@@ -1,5 +1,6 @@
 package a.danylenko.microcontroller.automatization.project.services.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import a.danylenko.microcontroller.automatization.project.data.entities.CommandHistory;
@@ -64,16 +65,52 @@ public class CommandHistoryServiceImpl implements CommandHistoryService {
   @Override
   public void add(final CommandHistory item, final String userId)
       throws ItemAlreadyExistsException, NoSuchItemException {
+    Preconditions.checkNotNull(item, "Command history item can't be null");
+    Preconditions.checkNotNull(item.getCommandId(), "Command id can't be null");
+    Preconditions.checkNotNull(item.getDeviceId(), "Device id can't be null");
+    Preconditions.checkNotNull(userId, "User id can't be null");
 
+    LOG.debug("Save command history item with commandId={}, deviceId={}", item.getCommandId(),
+        item.getDeviceId());
+
+    deviceService.getByIdAndUserId(item.getDeviceId(), userId);
+
+    try {
+      getByIdAndUserId(item.getId(), userId);
+      throw new ItemAlreadyExistsException(String
+          .format("Command history entry already exist " + "with id=%s and userId=%s", item.getId(),
+              userId));
+    } catch (NoSuchItemException ex) {
+      final CommandHistory commandHistory =
+          new CommandHistory(item.getDeviceId(), item.getCommandId(), new Date().getTime(),
+              item.isResult(), item.getResponse(), userId);
+
+      commandHistoryRepository.save(commandHistory);
+    }
   }
 
   @Override
   public void delete(final String id, final String userId) throws NoSuchItemException {
-
+    LOG.debug("Not implemented and not needed");
   }
 
   @Override
   public void update(final CommandHistory item, final String userId) throws NoSuchItemException {
+    Preconditions.checkNotNull(item, "Command history item can't be null");
+    Preconditions.checkNotNull(item.getCommandId(), "Command id can't be null");
+    Preconditions.checkNotNull(item.getDeviceId(), "Device id can't be null");
+    Preconditions.checkNotNull(item.getId(), "Device id can't be null");
+    Preconditions.checkNotNull(userId, "Command history entry id can't be null");
 
+    LOG.debug("Update command history entry with id={},response={},userId={}", item.getId(),
+        item.getResponse(), userId);
+
+    deviceService.getByIdAndUserId(item.getDeviceId(), userId);
+
+    final CommandHistory commandHistory = getByIdAndUserId(item.getId(), userId);
+    commandHistory.setResult(item.isResult());
+    commandHistory.setResponse(item.getResponse());
+
+    commandHistoryRepository.save(commandHistory);
   }
 }
