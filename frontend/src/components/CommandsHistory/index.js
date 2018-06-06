@@ -41,54 +41,42 @@ export class CommandHistoryTable extends Component {
           <TableHeaderColumn
             dataField="id"
             dataAlign="center"
-            isKey={true}
-            hidden
+            isKey
+            filter={{ type: "TextFilter", defaultValue: "" }}
           >
             Id
           </TableHeaderColumn>
           <TableHeaderColumn
-            dataField="name"
+            dataField="timestamp"
             dataAlign="center"
-            filter={{ type: "TextFilter", defaultValue: "" }}
+            filter={{ type: "DateFilter" }}
           >
-            Name
+            Date
           </TableHeaderColumn>
           <TableHeaderColumn
-            dataField="type"
+            dataField="commandId"
             dataAlign="center"
             dataSort={true}
-            filter={{
-              type: "SelectFilter",
-              options: { INPUT: "INPUT", OUTPUT: "OUTPUT" }
-            }}
+            filter={{ type: "TextFilter", defaultValue: "" }}
           >
-            Type
+            Command
           </TableHeaderColumn>
           <TableHeaderColumn
-            dataField="pins"
+            dataField="response"
             dataAlign="center"
             filter={{ type: "TextFilter", defaultValue: "" }}
           >
-            Pin
+            Response
           </TableHeaderColumn>
           <TableHeaderColumn
-            dataField="currentState"
+            dataField="result"
             dataAlign="center"
-            dataFormat={(cell, x) => (
-              <Link
-                to="#"
-                className="link-details"
-                onClick={e => {
-                  console.log("Click");
-                  this.props.makeCommandActive(x.id);
-                  this.props.loadStates();
-                }}
-              >
-                {x.currentState ? x.currentState : "N/A"}&nbsp;<FontAwesome name="chevron-right" />
-              </Link>
-            )}
+            filter={{
+              type: "SelectFilter",
+              options: { true: "Success", false: "Failed" }
+            }}
           >
-            Current state
+            Status
           </TableHeaderColumn>
         </SmartTable>
       </div>
@@ -109,6 +97,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  CommandHistoryTable
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CommandHistoryTable);

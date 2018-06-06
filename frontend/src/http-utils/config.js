@@ -17,5 +17,5 @@ export const STATES_URL = {
 };
 
 export const COMMANDS_HISTORY_URL = {
-  listByDeviceId: deviceId => BASE_PATH + "command-history/" + deviceId
+  listByDeviceId: deviceId => BASE_PATH + "command-history/list/" + deviceId
 };
